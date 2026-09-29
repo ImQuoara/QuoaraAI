@@ -1,0 +1,2264 @@
+diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/.github/workflows/verify-quoaraai.yml /mnt/data/quoaraai001p/.github/workflows/verify-quoaraai.yml
+--- /mnt/data/quoaraai001o/.github/workflows/verify-quoaraai.yml	2026-09-28 21:15:42.699539951 +0000
++++ /mnt/data/quoaraai001p/.github/workflows/verify-quoaraai.yml	2026-09-28 21:35:09.770074083 +0000
+@@ -27,6 +27,9 @@
+       - name: Install locked dependencies
+         run: npm ci
+ 
++      - name: Audit production dependencies
++        run: npm audit --omit=dev --audit-level=high
++
+       - name: Lint
+         run: npm run lint
+ 
+diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/AI-REVIEW-HANDOFF-001P.md /mnt/data/quoaraai001p/AI-REVIEW-HANDOFF-001P.md
+--- /mnt/data/quoaraai001o/AI-REVIEW-HANDOFF-001P.md	1970-01-01 00:00:00.000000000 +0000
++++ /mnt/data/quoaraai001p/AI-REVIEW-HANDOFF-001P.md	2026-09-28 21:35:11.270271119 +0000
+@@ -0,0 +1,25 @@
++# QuoaraAi 001P AI review handoff
++
++Project: QuoaraAi
++Baseline: 001P
++Android: `com.imquoara.quoaraai`, 0.4.3-alpha, versionCode 7
++Backend: 1.1.3
++Canonical Supabase: Self build / `csoimooaosncrrhaittf` / ca-central-1
++GitHub: canonical QuoaraAi repository not yet established
++
++001P is a review-reconciled hardening release based on 001O plus Gemini's independent review.
++
++Changes:
++- Off-origin auth WebView delegation is HTTPS-only; HTTP and custom schemes are blocked.
++- Backend verification CI now includes `npm audit --omit=dev --audit-level=high`.
++- Gemini claims were reconciled against source and primary documentation in `GEMINI-REVIEW-RECONCILIATION-001P.md`.
++- Android/backend versions bumped to 0.4.3-alpha/versionCode 7 and 1.1.3.
++
++Not yet verified:
++- npm CI checks
++- Android APK compilation/install
++- live canonical Supabase migration state
++- runtime login / P-256 device approval
++- deployment
++
++Reviewers should inspect the source rather than repeating previous review claims.
+diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/CANONICAL-PROJECT-STATE.md /mnt/data/quoaraai001p/CANONICAL-PROJECT-STATE.md
+--- /mnt/data/quoaraai001o/CANONICAL-PROJECT-STATE.md	2026-09-28 21:33:36.055060057 +0000
++++ /mnt/data/quoaraai001p/CANONICAL-PROJECT-STATE.md	2026-09-28 21:35:11.110615710 +0000
+@@ -4,17 +4,17 @@
+ 
+ ## Canonical identity
+ - Product: **QuoaraAi**
+-- Current local source baseline: **001O**
++- Current local source baseline: **001P**
+ - Android application ID / namespace: `com.imquoara.quoaraai`
+-- Android version: `0.4.2-alpha` (`versionCode 6`)
+-- Backend package: `quoaraai-backend` `1.1.2`
++- Android version: `0.4.3-alpha` (`versionCode 7`)
++- Backend package: `quoaraai-backend` `1.1.3`
+ - Canonical Supabase declared by owner: `Self build` / `csoimooaosncrrhaittf` / `ca-central-1`
+ - Canonical GitHub repository: **not created/verified yet**
+ 
+ ## Source lineage
+ - Owner-supplied 001M SHA-256: `f0f86a88f99e2a85fb43b706e6ff67893fe0600a9113187daaaa14b21db946b8`
+ - Stabilized 001N SHA-256: `2615a5eb59accc19092615e1e6336823acb41abc3f264581a2942cc2e950e866`
+-- 001O archive SHA-256: recorded outside the archive after packaging.
++- 001P archive SHA-256: recorded outside the archive after packaging.
+ 
+ ## Verified directly from source
+ - Native Android owner shell exists.
+@@ -23,10 +23,10 @@
+ - Auth WebView disables file/content access and mixed content.
+ - Backend is Next.js 16.3.6 / React 19.3.0 / Supabase SSR 0.12.7.
+ - Owner-only server checks are present on protected API/page paths.
+-- Supabase migrations exist for base schema, security patch, intelligence foundation, tenant guard, owner controls, owner devices, and 001O approval integrity.
++- Supabase migrations exist for base schema, security patch, intelligence foundation, tenant guard, owner controls, owner devices, and 001P approval integrity.
+ - Provider/API secrets are represented by placeholders in `.env.example`; static scan found no live secret values.
+ 
+-## 001O security changes
++## 001P security changes
+ - Image action hashes are deterministically reconstructed from exact signed inputs.
+ - Image execution re-verifies the stored Android P-256 signature and requires the approving device to remain active.
+ - Exact challenge expiry text is persisted and bound to the database expiry instant.
+@@ -53,9 +53,14 @@
+ - GitHub commit/CI execution.
+ 
+ ## Next evidence gates
+-1. Independent AI review of exact 001O source.
++1. Independent AI review of exact 001P source.
+ 2. Create/identify canonical QuoaraAi GitHub repository after owner approval.
+-3. Commit exact 001O baseline and record commit SHA.
++3. Commit exact 001P baseline and record commit SHA.
+ 4. Run manual `Verify QuoaraAi Source` CI workflow.
+ 5. Apply/verify migrations only against canonical `Self build` after owner approval.
+ 6. Build Android debug APK from the committed SHA and test login/device approval on the owner phone.
++
++
++## Gemini review reconciliation
++
++See `GEMINI-REVIEW-RECONCILIATION-001P.md`. 001P accepts only findings supported by source or primary documentation.
+diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/CHANGESET-001O.diff /mnt/data/quoaraai001p/CHANGESET-001O.diff
+--- /mnt/data/quoaraai001o/CHANGESET-001O.diff	2026-09-28 21:18:48.943968766 +0000
++++ /mnt/data/quoaraai001p/CHANGESET-001O.diff	1970-01-01 00:00:00.000000000 +0000
+@@ -1,978 +0,0 @@
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/.github/workflows/build-quoaraai-android.yml /mnt/data/quoaraai001o/.github/workflows/build-quoaraai-android.yml
+---- /mnt/data/quoaraai001n_run/quoaraai001n/.github/workflows/build-quoaraai-android.yml	2026-09-28 16:02:48.000000000 +0000
+-+++ /mnt/data/quoaraai001o/.github/workflows/build-quoaraai-android.yml	2026-09-28 21:13:17.113791798 +0000
+-@@ -41,7 +41,7 @@
+-       - name: Upload APK artifact
+-         uses: actions/upload-artifact@v4
+-         with:
+--          name: QuoaraAi-001M-owner-debug-apk
+-+          name: QuoaraAi-owner-debug-apk
+-           path: android/app/build/outputs/apk/debug/app-debug.apk
+-           if-no-files-found: error
+-           retention-days: 7
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/.github/workflows/verify-quoaraai.yml /mnt/data/quoaraai001o/.github/workflows/verify-quoaraai.yml
+---- /mnt/data/quoaraai001n_run/quoaraai001n/.github/workflows/verify-quoaraai.yml	1970-01-01 00:00:00.000000000 +0000
+-+++ /mnt/data/quoaraai001o/.github/workflows/verify-quoaraai.yml	2026-09-28 21:15:42.699539951 +0000
+-@@ -0,0 +1,45 @@
+-+name: Verify QuoaraAi Source
+-+
+-+on:
+-+  workflow_dispatch:
+-+
+-+permissions:
+-+  contents: read
+-+
+-+jobs:
+-+  backend:
+-+    runs-on: ubuntu-latest
+-+    timeout-minutes: 20
+-+    defaults:
+-+      run:
+-+        working-directory: backend
+-+    steps:
+-+      - name: Check out source
+-+        uses: actions/checkout@v5
+-+
+-+      - name: Set up Node 22
+-+        uses: actions/setup-node@v4
+-+        with:
+-+          node-version: '22'
+-+          cache: npm
+-+          cache-dependency-path: backend/package-lock.json
+-+
+-+      - name: Install locked dependencies
+-+        run: npm ci
+-+
+-+      - name: Lint
+-+        run: npm run lint
+-+
+-+      - name: Typecheck
+-+        run: npm run typecheck
+-+
+-+      - name: Test
+-+        run: npm test
+-+
+-+      - name: Production build
+-+        env:
+-+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+-+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ci-placeholder-key
+-+          SUPABASE_SECRET_KEY: ci-placeholder-secret
+-+          QUOARAAI_OWNER_USER_ID: 00000000-0000-4000-8000-000000000000
+-+        run: npm run build
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/AI-REVIEW-HANDOFF-001O.md /mnt/data/quoaraai001o/AI-REVIEW-HANDOFF-001O.md
+---- /mnt/data/quoaraai001n_run/quoaraai001n/AI-REVIEW-HANDOFF-001O.md	1970-01-01 00:00:00.000000000 +0000
+-+++ /mnt/data/quoaraai001o/AI-REVIEW-HANDOFF-001O.md	2026-09-28 21:18:48.711963840 +0000
+-@@ -0,0 +1,36 @@
+-+# QuoaraAi 001O — External AI Review Handoff
+-+
+-+Maximum response: 12,000 characters.
+-+
+-+Review the exact 001O source package. Do not rewrite or mutate external systems. Return evidence-backed findings only.
+-+
+-+## Canonical identity
+-+- Project: QuoaraAi
+-+- Source version: 001O
+-+- Android: `com.imquoara.quoaraai`, `0.4.2-alpha`, versionCode 6, compile/target SDK 36, min SDK 28
+-+- Backend: `quoaraai-backend` 1.1.2
+-+- Canonical Supabase declared by owner: `Self build` / `csoimooaosncrrhaittf` / `ca-central-1`
+-+- Canonical GitHub repository: not yet created/verified
+-+
+-+## Focus review
+-+1. Verify the new signed-action binding and execution-time signature recheck.
+-+2. Review `20260928004000_owner_approval_integrity.sql` for PostgreSQL correctness, privilege safety, atomicity, and race conditions.
+-+3. Verify revoked devices cannot self-reactivate through the mobile registration flow.
+-+4. Verify the service-role application can still insert/select audit ledger rows after append-only privilege hardening.
+-+5. Find any path that could execute an image request whose prompt/model/cost differs from the device-signed action.
+-+6. Review auth/session/cookie/WebView behavior and exact-origin enforcement.
+-+7. Find compile/type/runtime defects and stale tests/documentation.
+-+8. Review all service-role use for confused-deputy or tenant-boundary issues.
+-+9. Review zero-dollar provider enforcement and any route that could silently fall back to paid usage.
+-+10. Identify the smallest safe changes needed before GitHub baseline + CI + APK build.
+-+
+-+For each finding label: PROVEN, LIKELY, or NEEDS RUNTIME VERIFICATION. Include file path/function, impact, and smallest safe fix.
+-+
+-+Finish with:
+-+- CRITICAL
+-+- HIGH
+-+- MEDIUM/LOW
+-+- CONFIRMED IMPROVEMENTS
+-+- CONTRADICTIONS
+-+- RUNTIME-ONLY CHECKS
+-+- TOP 5 NEXT ACTIONS
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/CANONICAL-PROJECT-STATE.md /mnt/data/quoaraai001o/CANONICAL-PROJECT-STATE.md
+---- /mnt/data/quoaraai001n_run/quoaraai001n/CANONICAL-PROJECT-STATE.md	2026-09-28 20:32:26.000000000 +0000
+-+++ /mnt/data/quoaraai001o/CANONICAL-PROJECT-STATE.md	2026-09-28 21:18:48.811965963 +0000
+-@@ -1,47 +1,61 @@
+- # QuoaraAi Canonical Project State
+- 
+--Baseline established from owner-supplied source archive on 2026-09-28.
+-+Updated: 2026-09-28
+- 
+- ## Canonical identity
+- - Product: **QuoaraAi**
+-+- Current local source baseline: **001O**
+- - Android application ID / namespace: `com.imquoara.quoaraai`
+--- Android version: `0.4.1-alpha` (`versionCode 5`)
+--- Backend package: `quoaraai-backend` `1.1.1`
+--- Canonical Supabase project declared by owner: `Self build` / `csoimooaosncrrhaittf` / `ca-central-1`
+-+- Android version: `0.4.2-alpha` (`versionCode 6`)
+-+- Backend package: `quoaraai-backend` `1.1.2`
+-+- Canonical Supabase declared by owner: `Self build` / `csoimooaosncrrhaittf` / `ca-central-1`
+- - Canonical GitHub repository: **not created/verified yet**
+--- Source baseline archive SHA-256: `f0f86a88f99e2a85fb43b706e6ff67893fe0600a9113187daaaa14b21db946b8`
+- 
+--## Baseline verification
+--Verified directly from source:
+--- Native Android shell exists.
+--- Android target/compile SDK is 36.
+--- Android min SDK is 28.
+--- Android Gradle Plugin is 9.4.0; intended Gradle is 9.6.0; JDK 17 is used by CI.
+--- Cleartext traffic is disabled at manifest and network-security-config level.
+--- WebView file/content access and mixed content are disabled.
+--- Backend is Next.js 16.3.6 + React 19.3.0 + Supabase SSR 0.12.7.
+--- Supabase migrations exist in source, including owner control and owner-device security migrations.
+--- No provider/API secret values were found in the source scan; `.env.example` contains placeholders only.
+--
+--## 001N stabilization changes prepared locally
+--- Require the Android backend configuration to be a root HTTPS origin (no path/query/fragment/userinfo).
+--- Restrict authentication WebView navigation to the exact configured HTTPS origin, including port semantics.
+--- Update stale Android user-agent version `0.3` -> `0.4`.
+--- Replace stale setup hint `self.example.com` -> `quoaraai.example.com`.
+--- Fix PWA icon reference to the existing `quoaraai-icon.svg`.
+--- Correct Android README minSdk from 26 -> 28.
+--- Correct APK workflow documentation path to `build-quoaraai-android.yml`.
+--- Add a root `.gitignore` for the future canonical repository.
+--- Remove bundled `node_modules` directories from the source handoff.
+--
+--## Verification limitations
+--The current sandbox could not complete `npm ci`, so backend typecheck/lint/tests/build are **not yet verified in this environment**. The failures observed after the incomplete install were missing dependency/type packages, not source-code test failures.
+--
+--The Android APK has **not yet been built in this environment** because Gradle/Android SDK tooling is not installed here. The included GitHub Actions workflow is intended to perform that build once the canonical repository exists.
+-+## Source lineage
+-+- Owner-supplied 001M SHA-256: `f0f86a88f99e2a85fb43b706e6ff67893fe0600a9113187daaaa14b21db946b8`
+-+- Stabilized 001N SHA-256: `2615a5eb59accc19092615e1e6336823acb41abc3f264581a2942cc2e950e866`
+-+- 001O archive SHA-256: recorded outside the archive after packaging.
+-+
+-+## Verified directly from source
+-+- Native Android owner shell exists.
+-+- Android compile/target SDK 36, min SDK 28.
+-+- Cleartext traffic disabled at manifest/network-security level.
+-+- Auth WebView disables file/content access and mixed content.
+-+- Backend is Next.js 16.3.6 / React 19.3.0 / Supabase SSR 0.12.7.
+-+- Owner-only server checks are present on protected API/page paths.
+-+- Supabase migrations exist for base schema, security patch, intelligence foundation, tenant guard, owner controls, owner devices, and 001O approval integrity.
+-+- Provider/API secrets are represented by placeholders in `.env.example`; static scan found no live secret values.
+-+
+-+## 001O security changes
+-+- Image action hashes are deterministically reconstructed from exact signed inputs.
+-+- Image execution re-verifies the stored Android P-256 signature and requires the approving device to remain active.
+-+- Exact challenge expiry text is persisted and bound to the database expiry instant.
+-+- Signed approval + ledger append is atomic through a server-only SQL RPC.
+-+- Web control decisions + ledger append are atomic through a server-only SQL RPC.
+-+- Owner-device registration + audit append is atomic; revoked keys cannot self-reactivate.
+-+- Owner and intelligence action ledgers are append-only to the application service role (select/insert only).
+-+- Android auth WebView delegates only HTTP/HTTPS off-origin links to the system browser.
+-+- Added manual backend CI verification workflow.
+-+
+-+## Local verification status
+-+PASS:
+-+- Package/package-lock identity and version consistency.
+-+- Android XML parsing.
+-+- Static secret scan.
+-+- Image-action tamper detection runtime check.
+-+- P-256 approval signature runtime check.
+-+
+-+NOT YET VERIFIED:
+-+- Full dependency install, lint, typecheck, test suite, production build.
+-+- Android APK compilation.
+-+- Live Supabase migration execution/state.
+-+- Runtime authentication against deployed backend.
+-+- GitHub commit/CI execution.
+- 
+- ## Next evidence gates
+--1. Create/identify the canonical `QuoaraAi` GitHub repository.
+--2. Commit this exact baseline and record commit SHA.
+--3. Run backend `npm ci`, lint, typecheck, tests, and production build in CI.
+--4. Run the manual Android APK workflow with an approved HTTPS backend origin.
+--5. Apply/verify Supabase migrations only after owner approval against the canonical `Self build` project.
+-+1. Independent AI review of exact 001O source.
+-+2. Create/identify canonical QuoaraAi GitHub repository after owner approval.
+-+3. Commit exact 001O baseline and record commit SHA.
+-+4. Run manual `Verify QuoaraAi Source` CI workflow.
+-+5. Apply/verify migrations only against canonical `Self build` after owner approval.
+-+6. Build Android debug APK from the committed SHA and test login/device approval on the owner phone.
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/HARDENING-001O.md /mnt/data/quoaraai001o/HARDENING-001O.md
+---- /mnt/data/quoaraai001n_run/quoaraai001n/HARDENING-001O.md	1970-01-01 00:00:00.000000000 +0000
+-+++ /mnt/data/quoaraai001o/HARDENING-001O.md	2026-09-28 21:18:48.811965963 +0000
+-@@ -0,0 +1,62 @@
+-+# QuoaraAi 001O — Approval Integrity Hardening
+-+
+-+001O is a local source-only hardening pass over 001N. It does not write GitHub, deploy, modify Supabase, spend provider credits, or change external permissions.
+-+
+-+## Verified issues corrected
+-+
+-+1. **Signed action binding at execution time**
+-+   - 001N verified the device signature when an action was approved, but image execution trusted the stored payload afterward.
+-+   - 001O deterministically recomputes the approved image action hash from owner ID, prompt, aspect ratio, mode, exact free-model candidates, routing policy, and zero-dollar ceiling.
+-+   - Execution re-verifies the stored Android P-256 approval signature against the exact action hash before any provider call.
+-+   - A revoked approving device now blocks execution.
+-+
+-+2. **Stable expiry binding**
+-+   - Approval challenges previously depended on the database timestamp string representation.
+-+   - 001O stores the exact challenge expiry string inside the action payload, compares it to the database expiry by instant, and uses the exact signed representation for verification.
+-+
+-+3. **Atomic signed approval + audit record**
+-+   - 001N updated an action to approved and then wrote the audit ledger separately.
+-+   - 001O adds `approve_owner_action_request(...)`, a server-only SQL function that updates the pending zero-dollar action and appends the approval ledger entry atomically.
+-+
+-+4. **Atomic control-console decision + audit record**
+-+   - `decideActionRequest` previously changed status before writing the ledger.
+-+   - 001O adds `decide_owner_action_request(...)` and routes decisions through the atomic function.
+-+
+-+5. **Atomic owner-device registration + audit record**
+-+   - Device registration previously upserted the device before attempting the ledger write.
+-+   - 001O adds `register_owner_device(...)` so registry mutation and audit append happen together.
+-+   - A revoked device key cannot silently reactivate itself through the registration endpoint.
+-+
+-+6. **Append-only application audit ledgers**
+-+   - Earlier migrations granted service-role update/delete rights to the ledger tables.
+-+   - 001O revokes update/delete/truncate from `owner_action_ledger` and `quoaraai_action_ledger`, leaving application access at select/insert.
+-+
+-+7. **Android external navigation hardening**
+-+   - The auth WebView no longer attempts to launch arbitrary non-HTTP(S) URI schemes externally.
+-+   - Only normal HTTP/HTTPS off-origin links are delegated to the system browser.
+-+
+-+8. **Version/workflow cleanup**
+-+   - Android: `0.4.2-alpha`, versionCode `6`.
+-+   - Backend: `1.1.2`.
+-+   - Android workflow artifact name is now version-neutral.
+-+   - Added a manual backend verification workflow for locked install, lint, typecheck, tests, and production build.
+-+
+-+## Verification performed locally
+-+
+-+- 001M SHA-256: `f0f86a88f99e2a85fb43b706e6ff67893fe0600a9113187daaaa14b21db946b8`
+-+- 001N SHA-256: `2615a5eb59accc19092615e1e6336823acb41abc3f264581a2942cc2e950e866`
+-+- Package/package-lock identity and version consistency: PASS.
+-+- Android manifest and network-security XML parsing: PASS.
+-+- Static secret-pattern scan: PASS; no live provider/API secret values found.
+-+- New image-action canonicalization/tamper checks executed under Node 22 type stripping: PASS.
+-+- P-256 approval challenge/signature runtime check: PASS.
+-+
+-+## Still not verified here
+-+
+-+- `npm ci`, ESLint, full TypeScript typecheck, full test suite, and `next build`: blocked because this sandbox cannot reach npm registry and the original archive did not contain usable dependency files.
+-+- Android Gradle compile/APK build: Android SDK/Gradle are not installed in this sandbox.
+-+- SQL migration execution against canonical Supabase: not performed.
+-+- Runtime login against a deployed QuoaraAi backend: not performed.
+-+- GitHub repository/commit/CI runs: not created or executed.
+-+
+-+These remain explicit evidence gates, not assumed successes.
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/android/app/build.gradle /mnt/data/quoaraai001o/android/app/build.gradle
+---- /mnt/data/quoaraai001n_run/quoaraai001n/android/app/build.gradle	2026-09-28 20:32:26.000000000 +0000
+-+++ /mnt/data/quoaraai001o/android/app/build.gradle	2026-09-28 21:13:17.113656153 +0000
+-@@ -10,8 +10,8 @@
+-         applicationId 'com.imquoara.quoaraai'
+-         minSdk 28
+-         targetSdk 36
+--        versionCode 5
+--        versionName '0.4.1-alpha'
+-+        versionCode 6
+-+        versionName '0.4.2-alpha'
+- 
+-         def configuredUrl = providers.gradleProperty('QUOARAAI_APP_URL').orNull ?: 'https://quoaraai.invalid'
+-         buildConfigField 'String', 'QUOARAAI_APP_URL', '"' + configuredUrl.replace('"', '\\"') + '"'
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java /mnt/data/quoaraai001o/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java
+---- /mnt/data/quoaraai001n_run/quoaraai001n/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java	2026-09-28 20:31:32.000000000 +0000
+-+++ /mnt/data/quoaraai001o/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java	2026-09-28 21:13:17.113740761 +0000
+-@@ -92,7 +92,7 @@
+-         save.setOnClickListener(v -> {
+-             String value = input.getText().toString();
+-             if (!BackendConfig.save(this, value)) {
+--                error.setText("Use a valid HTTPS URL with no embedded username/password.");
+-+                error.setText("Use a root HTTPS origin only, with no path, query, fragment, or embedded credentials.");
+-                 return;
+-             }
+-             appUrl = BackendConfig.load(this);
+-@@ -139,7 +139,7 @@
+-         s.setMediaPlaybackRequiresUserGesture(true);
+-         s.setSaveFormData(false);
+-         s.setSupportMultipleWindows(false);
+--        s.setUserAgentString(s.getUserAgentString() + " QuoaraAi-Android/0.4 AuthBootstrap");
+-+        s.setUserAgentString(s.getUserAgentString() + " QuoaraAi-Android/0.4.2 AuthBootstrap");
+- 
+-         CookieManager cookies = CookieManager.getInstance();
+-         cookies.setAcceptCookie(true);
+-@@ -150,7 +150,10 @@
+-                 Uri uri = request.getUrl();
+-                 String targetOrigin = BackendConfig.origin(uri.toString());
+-                 if (targetOrigin != null && allowedOrigin.equalsIgnoreCase(targetOrigin)) return false;
+--                try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); } catch (Exception ignored) {}
+-+                String scheme = uri.getScheme();
+-+                if ("https".equalsIgnoreCase(scheme) || "http".equalsIgnoreCase(scheme)) {
+-+                    try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); } catch (Exception ignored) {}
+-+                }
+-                 return true;
+-             }
+- 
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/package-lock.json /mnt/data/quoaraai001o/backend/package-lock.json
+---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/package-lock.json	2026-09-28 20:32:26.000000000 +0000
+-+++ /mnt/data/quoaraai001o/backend/package-lock.json	2026-09-28 21:13:17.113497935 +0000
+-@@ -1,12 +1,12 @@
+- {
+-   "name": "quoaraai-backend",
+--  "version": "1.1.1",
+-+  "version": "1.1.2",
+-   "lockfileVersion": 3,
+-   "requires": true,
+-   "packages": {
+-     "": {
+-       "name": "quoaraai-backend",
+--      "version": "1.1.1",
+-+      "version": "1.1.2",
+-       "dependencies": {
+-         "@google/genai": "2.24.0",
+-         "@supabase/ssr": "0.12.7",
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/package.json /mnt/data/quoaraai001o/backend/package.json
+---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/package.json	2026-09-28 20:32:26.000000000 +0000
+-+++ /mnt/data/quoaraai001o/backend/package.json	2026-09-28 21:13:17.110778059 +0000
+-@@ -1,6 +1,6 @@
+- {
+-   "name": "quoaraai-backend",
+--  "version": "1.1.1",
+-+  "version": "1.1.2",
+-   "private": true,
+-   "scripts": {
+-     "dev": "next dev",
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/image/prepare/route.ts /mnt/data/quoaraai001o/backend/src/app/api/image/prepare/route.ts
+---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/image/prepare/route.ts	2026-09-28 16:02:44.000000000 +0000
+-+++ /mnt/data/quoaraai001o/backend/src/app/api/image/prepare/route.ts	2026-09-28 21:15:10.906145386 +0000
+-@@ -1,6 +1,6 @@
+--import { createHash } from 'node:crypto';
+- import { buildApprovalChallenge, createApprovalNonce } from '@/lib/security/device-approval';
+--import { chooseFreeImageCandidates, type FreeImageMode } from '@/lib/cloudflare-image';
+-+import { prepareImageAction } from '@/lib/actions/image-action';
+-+import type { FreeImageMode } from '@/lib/cloudflare-image';
+- import { evaluateMediaPrompt } from '@/lib/content/policy';
+- import { isOwnerIdentity } from '@/lib/auth/owner';
+- import { bodyTooLarge, isSameOriginMutation } from '@/lib/security/request';
+-@@ -47,18 +47,8 @@
+-     return Response.json({ error: policy.reason ?? 'Prompt not allowed.', policy: policy.code }, { status: 400 });
+-   }
+- 
+--  const candidates = chooseFreeImageCandidates(mode, prompt, aspectRatio);
+--  const canonical = JSON.stringify({
+--    userId: data.user.id,
+--    action: 'generate_image',
+--    provider: 'cloudflare_workers_ai',
+--    routingPolicy: 'free_only_v1',
+--    candidates,
+--    prompt,
+--    aspectRatio,
+--    maxCostUsd: 0,
+--  });
+--  const actionHash = createHash('sha256').update(canonical).digest('hex');
+-+  const prepared = prepareImageAction({ userId: data.user.id, prompt, aspectRatio, mode });
+-+  const { candidates, actionHash } = prepared;
+-   const admin = createAdminClient();
+-   const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+-   const approvalNonce = createApprovalNonce();
+-@@ -75,13 +65,14 @@
+-       payload: {
+-         action_hash: actionHash,
+-         provider: 'cloudflare_workers_ai',
+--        routing_policy: 'free_only_v1',
+-+        routing_policy: 'free_only_v2',
+-         candidates,
+-         prompt,
+-         aspect_ratio: aspectRatio,
+-         mode,
+-         max_cost_usd: 0,
+-         approval_nonce: approvalNonce,
+-+        approval_expires_at: expiresAt,
+-       },
+-       estimated_cost_usd: 0,
+-       status: 'pending',
+-@@ -104,7 +95,7 @@
+-     metadata: {
+-       action_hash: actionHash,
+-       provider: 'cloudflare_workers_ai',
+--      routing_policy: 'free_only_v1',
+-+      routing_policy: 'free_only_v2',
+-       candidates,
+-       estimated_cost_usd: 0,
+-     },
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/image/route.ts /mnt/data/quoaraai001o/backend/src/app/api/image/route.ts
+---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/image/route.ts	2026-09-28 16:02:44.000000000 +0000
+-+++ /mnt/data/quoaraai001o/backend/src/app/api/image/route.ts	2026-09-28 21:15:10.906497047 +0000
+-@@ -1,4 +1,6 @@
+--import { generateFreeCloudflareImage, type FreeImageCandidate } from '@/lib/cloudflare-image';
+-+import { validateStoredImageAction } from '@/lib/actions/image-action';
+-+import { buildApprovalChallenge, verifyP256Signature } from '@/lib/security/device-approval';
+-+import { generateFreeCloudflareImage } from '@/lib/cloudflare-image';
+- import { isOwnerIdentity } from '@/lib/auth/owner';
+- import { bodyTooLarge, isSameOriginMutation } from '@/lib/security/request';
+- import { createAdminClient } from '@/lib/supabase/admin';
+-@@ -6,20 +8,6 @@
+- 
+- const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+- 
+--function validCandidates(value: unknown): value is FreeImageCandidate[] {
+--  return Array.isArray(value) && value.length > 0 && value.length <= 3 && value.every((candidate) => {
+--    if (!candidate || typeof candidate !== 'object') return false;
+--    const item = candidate as Record<string, unknown>;
+--    return typeof item.model === 'string'
+--      && item.model.startsWith('@cf/')
+--      && typeof item.width === 'number'
+--      && typeof item.height === 'number'
+--      && typeof item.steps === 'number'
+--      && typeof item.estimatedNeurons === 'number'
+--      && item.estimatedNeurons >= 0;
+--  });
+--}
+--
+- export async function POST(request: Request) {
+-   if (!isSameOriginMutation(request)) return Response.json({ error: 'Cross-site request blocked.' }, { status: 403 });
+-   if (bodyTooLarge(request, 8_192)) return Response.json({ error: 'Request too large.' }, { status: 413 });
+-@@ -55,25 +43,59 @@
+-     .eq('status', 'approved')
+-     .eq('estimated_cost_usd', 0)
+-     .gt('expires_at', now)
+--    .select('id,payload,estimated_cost_usd')
+-+    .select('id,payload,estimated_cost_usd,expires_at,approved_device_key_id,approval_signature_b64')
+-     .maybeSingle();
+- 
+-   if (claimError || !action) {
+-     return Response.json({ error: 'Approval is missing, expired, already used, or not a zero-dollar owner action.' }, { status: 428 });
+-   }
+- 
+--  const payload = action.payload && typeof action.payload === 'object' ? action.payload as Record<string, unknown> : {};
+--  const prompt = typeof payload.prompt === 'string' ? payload.prompt : '';
+--  const actionHash = typeof payload.action_hash === 'string' ? payload.action_hash : '';
+--  const provider = typeof payload.provider === 'string' ? payload.provider : '';
+--  const routingPolicy = typeof payload.routing_policy === 'string' ? payload.routing_policy : '';
+--  const candidates = payload.candidates;
+-+  const prepared = validateStoredImageAction(data.user.id, action.payload);
+-+  const approvedDeviceKeyId = typeof action.approved_device_key_id === 'string' ? action.approved_device_key_id : '';
+-+  const approvalSignature = typeof action.approval_signature_b64 === 'string' ? action.approval_signature_b64 : '';
+-+  const expiresAt = typeof action.expires_at === 'string' ? action.expires_at : '';
+- 
+--  if (!prompt || !actionHash || provider !== 'cloudflare_workers_ai' || routingPolicy !== 'free_only_v1' || !validCandidates(candidates)) {
+-+  if (!prepared || !approvedDeviceKeyId || !approvalSignature || !expiresAt) {
+-     await admin.from('owner_action_requests').update({ status: 'failed' }).eq('id', actionRequestId);
+--    return Response.json({ error: 'Approved free action payload is invalid. No provider call was made.' }, { status: 409 });
+-+    return Response.json({ error: 'Approved action is not bound to a valid signed payload. No provider call was made.' }, { status: 409 });
+-   }
+- 
+-+
+-+  const rowExpiryMs = Date.parse(expiresAt);
+-+  const signedExpiryMs = Date.parse(prepared.approvalExpiresAt);
+-+  if (!Number.isFinite(rowExpiryMs) || !Number.isFinite(signedExpiryMs) || rowExpiryMs !== signedExpiryMs) {
+-+    await admin.from('owner_action_requests').update({ status: 'failed' }).eq('id', actionRequestId);
+-+    return Response.json({ error: 'Approved action expiry binding is invalid. No provider call was made.' }, { status: 409 });
+-+  }
+-+
+-+  const { data: device, error: deviceError } = await admin
+-+    .from('owner_devices')
+-+    .select('public_key_spki_b64,status')
+-+    .eq('user_id', data.user.id)
+-+    .eq('device_key_id', approvedDeviceKeyId)
+-+    .eq('status', 'active')
+-+    .maybeSingle();
+-+
+-+  if (deviceError || !device) {
+-+    await admin.from('owner_action_requests').update({ status: 'failed' }).eq('id', actionRequestId);
+-+    return Response.json({ error: 'Approving owner device is unavailable or revoked. No provider call was made.' }, { status: 403 });
+-+  }
+-+
+-+  const challenge = buildApprovalChallenge({
+-+    actionRequestId,
+-+    actionHash: prepared.actionHash,
+-+    expiresAt: prepared.approvalExpiresAt,
+-+    nonce: prepared.approvalNonce,
+-+  });
+-+  if (!verifyP256Signature(device.public_key_spki_b64, challenge, approvalSignature)) {
+-+    await admin.from('owner_action_requests').update({ status: 'failed' }).eq('id', actionRequestId);
+-+    return Response.json({ error: 'Stored owner approval no longer verifies. No provider call was made.' }, { status: 403 });
+-+  }
+-+
+-+  const { prompt, actionHash, candidates } = prepared;
+-+  const provider = 'cloudflare_workers_ai';
+-+  const routingPolicy = 'free_only_v2';
+-+
+-   const { error: startLedgerError } = await admin.from('owner_action_ledger').insert({
+-     user_id: data.user.id,
+-     action_request_id: actionRequestId,
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/mobile/actions/approve/route.ts /mnt/data/quoaraai001o/backend/src/app/api/mobile/actions/approve/route.ts
+---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/mobile/actions/approve/route.ts	2026-09-28 16:02:44.000000000 +0000
+-+++ /mnt/data/quoaraai001o/backend/src/app/api/mobile/actions/approve/route.ts	2026-09-28 21:15:10.906396345 +0000
+-@@ -38,7 +38,8 @@
+- 
+-   if (actionError || deviceError) return Response.json({ error: 'Signed approval registry is unavailable.' }, { status: 503 });
+-   if (!action || !device) return Response.json({ error: 'Pending action or registered owner device not found.' }, { status: 404 });
+--  if (typeof action.expires_at !== 'string' || action.expires_at <= now) return Response.json({ error: 'Action approval expired.' }, { status: 410 });
+-+  const expiresAtMs = typeof action.expires_at === 'string' ? Date.parse(action.expires_at) : NaN;
+-+  if (!Number.isFinite(expiresAtMs) || expiresAtMs <= Date.now()) return Response.json({ error: 'Action approval expired.' }, { status: 410 });
+-   if (Number(action.estimated_cost_usd ?? 0) !== 0) {
+-     return Response.json({ error: 'This mobile fast-path only approves actions with a $0 provider-cost ceiling.' }, { status: 402 });
+-   }
+-@@ -46,36 +47,37 @@
+-   const payload = action.payload && typeof action.payload === 'object' ? action.payload as Record<string, unknown> : {};
+-   const actionHash = typeof payload.action_hash === 'string' ? payload.action_hash : '';
+-   const nonce = typeof payload.approval_nonce === 'string' ? payload.approval_nonce : '';
+--  if (!actionHash || !nonce) return Response.json({ error: 'Action does not contain a device-signable challenge.' }, { status: 409 });
+-+  const approvalExpiresAt = typeof payload.approval_expires_at === 'string' ? payload.approval_expires_at : '';
+-+  const approvalExpiresAtMs = Date.parse(approvalExpiresAt);
+-+  if (!actionHash || !nonce || !approvalExpiresAt || !Number.isFinite(approvalExpiresAtMs)) {
+-+    return Response.json({ error: 'Action does not contain a device-signable challenge.' }, { status: 409 });
+-+  }
+-+  if (approvalExpiresAtMs !== expiresAtMs) {
+-+    return Response.json({ error: 'Action approval expiry binding is invalid.' }, { status: 409 });
+-+  }
+- 
+--  const challenge = buildApprovalChallenge({ actionRequestId: id, actionHash, expiresAt: action.expires_at, nonce });
+-+  const challenge = buildApprovalChallenge({ actionRequestId: id, actionHash, expiresAt: approvalExpiresAt, nonce });
+-   if (!verifyP256Signature(device.public_key_spki_b64, challenge, signature)) {
+-     return Response.json({ error: 'Owner device signature is invalid.' }, { status: 403 });
+-   }
+- 
+--  const { data: approved, error: approveError } = await admin.from('owner_action_requests')
+--    .update({
+--      status: 'approved',
+--      decided_at: now,
+--      approved_device_key_id: keyId,
+--      approval_signature_b64: signature,
+--    })
+--    .eq('id', id).eq('user_id', auth.user.id).eq('status', 'pending')
+--    .select('id,kind,title,status,risk,reversible').maybeSingle();
+--
+--  if (approveError) return Response.json({ error: 'Could not record signed approval.' }, { status: 503 });
+--  if (!approved) return Response.json({ error: 'Action was already decided.' }, { status: 409 });
+--
+--  const { error: ledgerError } = await admin.from('owner_action_ledger').insert({
+--    user_id: auth.user.id,
+--    action_request_id: id,
+--    action_type: approved.kind,
+--    summary: `Device-approved: ${approved.title}`,
+--    status: 'approved',
+--    metadata: { device_key_id: keyId, action_hash: actionHash, risk: approved.risk, reversible: approved.reversible },
+-+  const { data: approvedRows, error: approveError } = await admin.rpc('approve_owner_action_request', {
+-+    p_user_id: auth.user.id,
+-+    p_action_request_id: id,
+-+    p_device_key_id: keyId,
+-+    p_signature_b64: signature,
+-+    p_action_hash: actionHash,
+-   });
+--  if (ledgerError) return Response.json({ error: 'Approval was recorded but audit ledger write failed.' }, { status: 503 });
+- 
+--  await admin.from('owner_devices').update({ last_seen_at: now }).eq('user_id', auth.user.id).eq('device_key_id', keyId);
+-+  if (approveError) return Response.json({ error: 'Could not atomically record signed approval.' }, { status: 503 });
+-+  const approved = Array.isArray(approvedRows) ? approvedRows[0] : null;
+-+  if (!approved) return Response.json({ error: 'Action was already decided, expired, changed, or is not zero-dollar.' }, { status: 409 });
+-+
+-+  const { error: seenError } = await admin.from('owner_devices')
+-+    .update({ last_seen_at: now })
+-+    .eq('user_id', auth.user.id)
+-+    .eq('device_key_id', keyId);
+-+  if (seenError) console.error('Owner device last_seen update failed:', seenError);
+-+
+-   return Response.json(approved, { headers: { 'Cache-Control': 'no-store' } });
+- }
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/mobile/device/route.ts /mnt/data/quoaraai001o/backend/src/app/api/mobile/device/route.ts
+---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/mobile/device/route.ts	2026-09-28 16:02:44.000000000 +0000
+-+++ /mnt/data/quoaraai001o/backend/src/app/api/mobile/device/route.ts	2026-09-28 21:17:12.009520972 +0000
+-@@ -59,24 +59,18 @@
+-     return Response.json({ error: 'Device proof signature is invalid.' }, { status: 403 });
+-   }
+- 
+--  const now = new Date().toISOString();
+-   const admin = createAdminClient();
+--  const { data, error } = await admin.from('owner_devices').upsert({
+--    user_id: user.id,
+--    device_key_id: keyId,
+--    public_key_spki_b64: publicKey,
+--    label: label || 'Android Owner Device',
+--    status: 'active',
+--    last_seen_at: now,
+--  }, { onConflict: 'user_id,device_key_id' }).select('device_key_id,label,status,created_at,last_seen_at').single();
+-+  const { data: rows, error } = await admin.rpc('register_owner_device', {
+-+    p_user_id: user.id,
+-+    p_device_key_id: keyId,
+-+    p_public_key_spki_b64: publicKey,
+-+    p_label: label || 'Android Owner Device',
+-+  });
+- 
+-   if (error) return Response.json({ error: 'Owner device registry is not ready.' }, { status: 503 });
+--  await admin.from('owner_action_ledger').insert({
+--    user_id: user.id,
+--    action_type: 'register_owner_device',
+--    summary: `Registered owner device: ${data.label}`,
+--    status: 'executed',
+--    metadata: { device_key_id: keyId },
+--  });
+--  return Response.json({ registered: true, device: data }, { status: 201, headers: { 'Cache-Control': 'no-store' } });
+-+  const device = Array.isArray(rows) ? rows[0] : null;
+-+  if (!device) {
+-+    return Response.json({ error: 'This device key is revoked and cannot reactivate itself.' }, { status: 409 });
+-+  }
+-+  return Response.json({ registered: true, device }, { status: 201, headers: { 'Cache-Control': 'no-store' } });
+- }
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/lib/actions/image-action.ts /mnt/data/quoaraai001o/backend/src/lib/actions/image-action.ts
+---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/lib/actions/image-action.ts	1970-01-01 00:00:00.000000000 +0000
+-+++ /mnt/data/quoaraai001o/backend/src/lib/actions/image-action.ts	2026-09-28 21:15:10.906293680 +0000
+-@@ -0,0 +1,84 @@
+-+import { createHash } from 'node:crypto';
+-+import {
+-+  chooseFreeImageCandidates,
+-+  type FreeImageCandidate,
+-+  type FreeImageMode,
+-+} from '@/lib/cloudflare-image';
+-+
+-+const ALLOWED_ASPECTS = new Set(['1:1', '4:3', '3:4', '16:9', '9:16']);
+-+const ALLOWED_MODES = new Set<FreeImageMode>(['auto', 'fast', 'leonardo']);
+-+
+-+export type PreparedImageAction = {
+-+  prompt: string;
+-+  aspectRatio: string;
+-+  mode: FreeImageMode;
+-+  candidates: FreeImageCandidate[];
+-+  actionHash: string;
+-+};
+-+
+-+function canonicalImageAction(input: {
+-+  userId: string;
+-+  prompt: string;
+-+  aspectRatio: string;
+-+  mode: FreeImageMode;
+-+  candidates: FreeImageCandidate[];
+-+}) {
+-+  return JSON.stringify({
+-+    userId: input.userId,
+-+    action: 'generate_image',
+-+    provider: 'cloudflare_workers_ai',
+-+    routingPolicy: 'free_only_v2',
+-+    candidates: input.candidates,
+-+    prompt: input.prompt,
+-+    aspectRatio: input.aspectRatio,
+-+    mode: input.mode,
+-+    maxCostUsd: 0,
+-+  });
+-+}
+-+
+-+export function prepareImageAction(input: {
+-+  userId: string;
+-+  prompt: string;
+-+  aspectRatio: string;
+-+  mode: FreeImageMode;
+-+}): PreparedImageAction {
+-+  const candidates = chooseFreeImageCandidates(input.mode, input.prompt, input.aspectRatio);
+-+  const actionHash = createHash('sha256')
+-+    .update(canonicalImageAction({ ...input, candidates }))
+-+    .digest('hex');
+-+
+-+  return { ...input, candidates, actionHash };
+-+}
+-+
+-+function sameCandidates(left: unknown, right: FreeImageCandidate[]) {
+-+  if (!Array.isArray(left)) return false;
+-+  return JSON.stringify(left) === JSON.stringify(right);
+-+}
+-+
+-+export function validateStoredImageAction(
+-+  userId: string,
+-+  payload: unknown,
+-+): (PreparedImageAction & { approvalNonce: string; approvalExpiresAt: string }) | null {
+-+  if (!payload || typeof payload !== 'object') return null;
+-+  const value = payload as Record<string, unknown>;
+-+
+-+  const prompt = typeof value.prompt === 'string' ? value.prompt : '';
+-+  const aspectRatio = typeof value.aspect_ratio === 'string' ? value.aspect_ratio : '';
+-+  const rawMode = typeof value.mode === 'string' ? value.mode : '';
+-+  const mode = ALLOWED_MODES.has(rawMode as FreeImageMode) ? rawMode as FreeImageMode : null;
+-+  const approvalNonce = typeof value.approval_nonce === 'string' ? value.approval_nonce : '';
+-+  const storedHash = typeof value.action_hash === 'string' ? value.action_hash : '';
+-+  const approvalExpiresAt = typeof value.approval_expires_at === 'string' ? value.approval_expires_at : '';
+-+
+-+  if (!prompt || prompt.length > 2048 || !ALLOWED_ASPECTS.has(aspectRatio) || !mode || !approvalNonce || !storedHash || !approvalExpiresAt || !Number.isFinite(Date.parse(approvalExpiresAt))) {
+-+    return null;
+-+  }
+-+  if (value.provider !== 'cloudflare_workers_ai' || value.routing_policy !== 'free_only_v2' || Number(value.max_cost_usd) !== 0) {
+-+    return null;
+-+  }
+-+
+-+  const prepared = prepareImageAction({ userId, prompt, aspectRatio, mode });
+-+  if (prepared.actionHash !== storedHash || !sameCandidates(value.candidates, prepared.candidates)) return null;
+-+
+-+  return { ...prepared, approvalNonce, approvalExpiresAt };
+-+}
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/quoaraai/store.ts /mnt/data/quoaraai001o/backend/src/quoaraai/store.ts
+---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/quoaraai/store.ts	2026-09-28 16:02:44.000000000 +0000
+-+++ /mnt/data/quoaraai001o/backend/src/quoaraai/store.ts	2026-09-28 21:16:43.631717377 +0000
+-@@ -41,29 +41,14 @@
+- }
+- 
+- export async function decideActionRequest(userId: string, id: string, decision: 'approved' | 'rejected') {
+--  const now = new Date().toISOString();
+-   const admin = createAdminClient();
+--  const { data, error } = await admin
+--    .from('owner_action_requests')
+--    .update({ status: decision, decided_at: now })
+--    .eq('id', id)
+--    .eq('user_id', userId)
+--    .eq('status', 'pending')
+--    .select('id,kind,title,status,risk,reversible')
+--    .maybeSingle();
+--  if (error) throw error;
+--  if (!data) return null;
+--
+--  const { error: ledgerError } = await admin.from('owner_action_ledger').insert({
+--    user_id: userId,
+--    action_request_id: id,
+--    action_type: data.kind,
+--    summary: `${decision === 'approved' ? 'Approved' : 'Rejected'}: ${data.title}`,
+--    status: decision,
+--    metadata: { risk: data.risk, reversible: data.reversible },
+-+  const { data, error } = await admin.rpc('decide_owner_action_request', {
+-+    p_user_id: userId,
+-+    p_action_request_id: id,
+-+    p_decision: decision,
+-   });
+--  if (ledgerError) throw ledgerError;
+--  return data;
+-+  if (error) throw error;
+-+  return Array.isArray(data) ? data[0] ?? null : null;
+- }
+- 
+- export async function listProjects(userId: string) {
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/supabase/migrations/20260928004000_owner_approval_integrity.sql /mnt/data/quoaraai001o/backend/supabase/migrations/20260928004000_owner_approval_integrity.sql
+---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/supabase/migrations/20260928004000_owner_approval_integrity.sql	1970-01-01 00:00:00.000000000 +0000
+-+++ /mnt/data/quoaraai001o/backend/supabase/migrations/20260928004000_owner_approval_integrity.sql	2026-09-28 21:17:12.009327130 +0000
+-@@ -0,0 +1,189 @@
+-+begin;
+-+
+-+-- Signed approvals must update the action request and append its approval ledger
+-+-- entry in the same database transaction. The API verifies the Android P-256
+-+-- signature first; this function atomically records the already-verified result.
+-+create or replace function public.approve_owner_action_request(
+-+  p_user_id uuid,
+-+  p_action_request_id uuid,
+-+  p_device_key_id text,
+-+  p_signature_b64 text,
+-+  p_action_hash text
+-+)
+-+returns table (
+-+  id uuid,
+-+  kind text,
+-+  title text,
+-+  status text,
+-+  risk text,
+-+  reversible boolean
+-+)
+-+language sql
+-+security definer
+-+set search_path = ''
+-+as $$
+-+  with updated as (
+-+    update public.owner_action_requests as ar
+-+       set status = 'approved',
+-+           decided_at = clock_timestamp(),
+-+           approved_device_key_id = p_device_key_id,
+-+           approval_signature_b64 = p_signature_b64
+-+     where ar.id = p_action_request_id
+-+       and ar.user_id = p_user_id
+-+       and ar.status = 'pending'
+-+       and ar.estimated_cost_usd = 0
+-+       and ar.expires_at > clock_timestamp()
+-+       and ar.payload->>'action_hash' = p_action_hash
+-+    returning ar.id, ar.kind, ar.title, ar.status, ar.risk, ar.reversible
+-+  ), logged as (
+-+    insert into public.owner_action_ledger (
+-+      user_id,
+-+      action_request_id,
+-+      action_type,
+-+      summary,
+-+      status,
+-+      metadata
+-+    )
+-+    select
+-+      p_user_id,
+-+      u.id,
+-+      u.kind,
+-+      'Device-approved: ' || u.title,
+-+      'approved',
+-+      jsonb_build_object(
+-+        'device_key_id', p_device_key_id,
+-+        'action_hash', p_action_hash,
+-+        'risk', u.risk,
+-+        'reversible', u.reversible
+-+      )
+-+    from updated u
+-+    returning action_request_id
+-+  )
+-+  select u.id, u.kind, u.title, u.status, u.risk, u.reversible
+-+    from updated u
+-+    join logged l on l.action_request_id = u.id;
+-+$$;
+-+
+-+revoke execute on function public.approve_owner_action_request(uuid, uuid, text, text, text)
+-+  from public, anon, authenticated;
+-+grant execute on function public.approve_owner_action_request(uuid, uuid, text, text, text)
+-+  to service_role;
+-+
+-+-- Device registration and its audit event are atomic. A revoked key cannot silently
+-+-- reactivate itself; re-enabling a revoked device requires an explicit administrative
+-+-- recovery path rather than another signed registration request from that key.
+-+create or replace function public.register_owner_device(
+-+  p_user_id uuid,
+-+  p_device_key_id text,
+-+  p_public_key_spki_b64 text,
+-+  p_label text
+-+)
+-+returns table (
+-+  device_key_id text,
+-+  label text,
+-+  status text,
+-+  created_at timestamptz,
+-+  last_seen_at timestamptz
+-+)
+-+language sql
+-+security definer
+-+set search_path = ''
+-+as $$
+-+  with upserted as (
+-+    insert into public.owner_devices as d (
+-+      user_id, device_key_id, public_key_spki_b64, label, status, last_seen_at
+-+    )
+-+    values (
+-+      p_user_id, p_device_key_id, p_public_key_spki_b64, p_label, 'active', clock_timestamp()
+-+    )
+-+    on conflict (user_id, device_key_id) do update
+-+      set public_key_spki_b64 = excluded.public_key_spki_b64,
+-+          label = excluded.label,
+-+          last_seen_at = clock_timestamp()
+-+      where d.status = 'active'
+-+    returning d.device_key_id, d.label, d.status, d.created_at, d.last_seen_at
+-+  ), logged as (
+-+    insert into public.owner_action_ledger (
+-+      user_id, action_type, summary, status, metadata
+-+    )
+-+    select
+-+      p_user_id,
+-+      'register_owner_device',
+-+      'Registered owner device: ' || u.label,
+-+      'executed',
+-+      jsonb_build_object('device_key_id', u.device_key_id)
+-+    from upserted u
+-+    returning id
+-+  )
+-+  select u.device_key_id, u.label, u.status, u.created_at, u.last_seen_at
+-+    from upserted u
+-+   where exists (select 1 from logged);
+-+$$;
+-+
+-+revoke execute on function public.register_owner_device(uuid, text, text, text)
+-+  from public, anon, authenticated;
+-+grant execute on function public.register_owner_device(uuid, text, text, text)
+-+  to service_role;
+-+
+-+-- Browser/control-console decisions also update the request and append its audit
+-+-- event atomically. Device-signature policy is enforced by the API before this
+-+-- function is called.
+-+create or replace function public.decide_owner_action_request(
+-+  p_user_id uuid,
+-+  p_action_request_id uuid,
+-+  p_decision text
+-+)
+-+returns table (
+-+  id uuid,
+-+  kind text,
+-+  title text,
+-+  status text,
+-+  risk text,
+-+  reversible boolean
+-+)
+-+language sql
+-+security definer
+-+set search_path = ''
+-+as $$
+-+  with updated as (
+-+    update public.owner_action_requests as ar
+-+       set status = p_decision,
+-+           decided_at = clock_timestamp()
+-+     where ar.id = p_action_request_id
+-+       and ar.user_id = p_user_id
+-+       and ar.status = 'pending'
+-+       and p_decision in ('approved', 'rejected')
+-+    returning ar.id, ar.kind, ar.title, ar.status, ar.risk, ar.reversible
+-+  ), logged as (
+-+    insert into public.owner_action_ledger (
+-+      user_id, action_request_id, action_type, summary, status, metadata
+-+    )
+-+    select
+-+      p_user_id,
+-+      u.id,
+-+      u.kind,
+-+      case when p_decision = 'approved' then 'Approved: ' else 'Rejected: ' end || u.title,
+-+      p_decision,
+-+      jsonb_build_object('risk', u.risk, 'reversible', u.reversible)
+-+    from updated u
+-+    returning action_request_id
+-+  )
+-+  select u.id, u.kind, u.title, u.status, u.risk, u.reversible
+-+    from updated u
+-+    join logged l on l.action_request_id = u.id;
+-+$$;
+-+
+-+revoke execute on function public.decide_owner_action_request(uuid, uuid, text)
+-+  from public, anon, authenticated;
+-+grant execute on function public.decide_owner_action_request(uuid, uuid, text)
+-+  to service_role;
+-+
+-+-- These tables are append-only audit records. Application code may read and append,
+-+-- but it must not rewrite or delete history through the service-role client.
+-+revoke update, delete, truncate on table public.owner_action_ledger from service_role;
+-+grant select, insert on table public.owner_action_ledger to service_role;
+-+
+-+revoke update, delete, truncate on table public.quoaraai_action_ledger from service_role;
+-+grant select, insert on table public.quoaraai_action_ledger to service_role;
+-+
+-+commit;
+-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/tests/quoaraai.test.ts /mnt/data/quoaraai001o/backend/tests/quoaraai.test.ts
+---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/tests/quoaraai.test.ts	2026-09-28 16:02:44.000000000 +0000
+-+++ /mnt/data/quoaraai001o/backend/tests/quoaraai.test.ts	2026-09-28 21:17:12.009585830 +0000
+-@@ -78,11 +78,32 @@
+-   assert.match(sql, /before insert or update of user_id, project_id/i);
+- });
+- 
+--test('paid image route is disabled by default and requires exact cost approval', () => {
+-+test('free image route is disabled by default and execution re-verifies signed approval', () => {
+-   const route = readFileSync('src/app/api/image/route.ts', 'utf8');
+-+  const prepare = readFileSync('src/app/api/image/prepare/route.ts', 'utf8');
+-+  const actionBinding = readFileSync('src/lib/actions/image-action.ts', 'utf8');
+-   const env = readFileSync('.env.example', 'utf8');
+-+
+-   assert.match(env, /QUOARAAI_IMAGE_GENERATION_ENABLED=false/);
+--  assert.match(route, /Exact owner cost approval is required/i);
+--  assert.match(route, /Approval ledger is unavailable\. Paid generation was not executed\./i);
+--  assert.match(route, /createHash\('sha256'\)/i);
+-+  assert.match(prepare, /approval_expires_at/);
+-+  assert.match(prepare, /free_only_v2/);
+-+  assert.match(actionBinding, /createHash\('sha256'\)/i);
+-+  assert.match(actionBinding, /chooseFreeImageCandidates/);
+-+  assert.match(route, /validateStoredImageAction/);
+-+  assert.match(route, /verifyP256Signature/);
+-+  assert.match(route, /owner_devices/);
+-+  assert.match(route, /No provider call was made/i);
+-+  assert.doesNotMatch(route, /paid fallback/i);
+-+});
+-+
+-+test('owner approval integrity migration makes signed approval + ledger atomic and ledgers append-only', () => {
+-+  const sql = readFileSync('supabase/migrations/20260928004000_owner_approval_integrity.sql', 'utf8');
+-+  assert.match(sql, /create or replace function public\.approve_owner_action_request/i);
+-+  assert.match(sql, /ar\.payload->>'action_hash' = p_action_hash/i);
+-+  assert.match(sql, /insert into public\.owner_action_ledger/i);
+-+  assert.match(sql, /create or replace function public\.register_owner_device/i);
+-+  assert.match(sql, /where d\.status = 'active'/i);
+-+  assert.match(sql, /create or replace function public\.decide_owner_action_request/i);
+-+  assert.match(sql, /revoke update, delete, truncate on table public\.owner_action_ledger from service_role/i);
+-+  assert.match(sql, /revoke update, delete, truncate on table public\.quoaraai_action_ledger from service_role/i);
+- });
+diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/CHANGESET-001P.diff /mnt/data/quoaraai001p/CHANGESET-001P.diff
+--- /mnt/data/quoaraai001o/CHANGESET-001P.diff	1970-01-01 00:00:00.000000000 +0000
++++ /mnt/data/quoaraai001p/CHANGESET-001P.diff	2026-09-28 21:35:11.277075670 +0000
+@@ -0,0 +1,1079 @@
++diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/.github/workflows/verify-quoaraai.yml /mnt/data/quoaraai001p/.github/workflows/verify-quoaraai.yml
++--- /mnt/data/quoaraai001o/.github/workflows/verify-quoaraai.yml	2026-09-28 21:15:42.699539951 +0000
+++++ /mnt/data/quoaraai001p/.github/workflows/verify-quoaraai.yml	2026-09-28 21:35:09.770074083 +0000
++@@ -27,6 +27,9 @@
++       - name: Install locked dependencies
++         run: npm ci
++ 
+++      - name: Audit production dependencies
+++        run: npm audit --omit=dev --audit-level=high
+++
++       - name: Lint
++         run: npm run lint
++ 
++diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/AI-REVIEW-HANDOFF-001P.md /mnt/data/quoaraai001p/AI-REVIEW-HANDOFF-001P.md
++--- /mnt/data/quoaraai001o/AI-REVIEW-HANDOFF-001P.md	1970-01-01 00:00:00.000000000 +0000
+++++ /mnt/data/quoaraai001p/AI-REVIEW-HANDOFF-001P.md	2026-09-28 21:35:11.270271119 +0000
++@@ -0,0 +1,25 @@
+++# QuoaraAi 001P AI review handoff
+++
+++Project: QuoaraAi
+++Baseline: 001P
+++Android: `com.imquoara.quoaraai`, 0.4.3-alpha, versionCode 7
+++Backend: 1.1.3
+++Canonical Supabase: Self build / `csoimooaosncrrhaittf` / ca-central-1
+++GitHub: canonical QuoaraAi repository not yet established
+++
+++001P is a review-reconciled hardening release based on 001O plus Gemini's independent review.
+++
+++Changes:
+++- Off-origin auth WebView delegation is HTTPS-only; HTTP and custom schemes are blocked.
+++- Backend verification CI now includes `npm audit --omit=dev --audit-level=high`.
+++- Gemini claims were reconciled against source and primary documentation in `GEMINI-REVIEW-RECONCILIATION-001P.md`.
+++- Android/backend versions bumped to 0.4.3-alpha/versionCode 7 and 1.1.3.
+++
+++Not yet verified:
+++- npm CI checks
+++- Android APK compilation/install
+++- live canonical Supabase migration state
+++- runtime login / P-256 device approval
+++- deployment
+++
+++Reviewers should inspect the source rather than repeating previous review claims.
++diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/CANONICAL-PROJECT-STATE.md /mnt/data/quoaraai001p/CANONICAL-PROJECT-STATE.md
++--- /mnt/data/quoaraai001o/CANONICAL-PROJECT-STATE.md	2026-09-28 21:33:36.055060057 +0000
+++++ /mnt/data/quoaraai001p/CANONICAL-PROJECT-STATE.md	2026-09-28 21:35:11.110615710 +0000
++@@ -4,17 +4,17 @@
++ 
++ ## Canonical identity
++ - Product: **QuoaraAi**
++-- Current local source baseline: **001O**
+++- Current local source baseline: **001P**
++ - Android application ID / namespace: `com.imquoara.quoaraai`
++-- Android version: `0.4.2-alpha` (`versionCode 6`)
++-- Backend package: `quoaraai-backend` `1.1.2`
+++- Android version: `0.4.3-alpha` (`versionCode 7`)
+++- Backend package: `quoaraai-backend` `1.1.3`
++ - Canonical Supabase declared by owner: `Self build` / `csoimooaosncrrhaittf` / `ca-central-1`
++ - Canonical GitHub repository: **not created/verified yet**
++ 
++ ## Source lineage
++ - Owner-supplied 001M SHA-256: `f0f86a88f99e2a85fb43b706e6ff67893fe0600a9113187daaaa14b21db946b8`
++ - Stabilized 001N SHA-256: `2615a5eb59accc19092615e1e6336823acb41abc3f264581a2942cc2e950e866`
++-- 001O archive SHA-256: recorded outside the archive after packaging.
+++- 001P archive SHA-256: recorded outside the archive after packaging.
++ 
++ ## Verified directly from source
++ - Native Android owner shell exists.
++@@ -23,10 +23,10 @@
++ - Auth WebView disables file/content access and mixed content.
++ - Backend is Next.js 16.3.6 / React 19.3.0 / Supabase SSR 0.12.7.
++ - Owner-only server checks are present on protected API/page paths.
++-- Supabase migrations exist for base schema, security patch, intelligence foundation, tenant guard, owner controls, owner devices, and 001O approval integrity.
+++- Supabase migrations exist for base schema, security patch, intelligence foundation, tenant guard, owner controls, owner devices, and 001P approval integrity.
++ - Provider/API secrets are represented by placeholders in `.env.example`; static scan found no live secret values.
++ 
++-## 001O security changes
+++## 001P security changes
++ - Image action hashes are deterministically reconstructed from exact signed inputs.
++ - Image execution re-verifies the stored Android P-256 signature and requires the approving device to remain active.
++ - Exact challenge expiry text is persisted and bound to the database expiry instant.
++@@ -53,9 +53,14 @@
++ - GitHub commit/CI execution.
++ 
++ ## Next evidence gates
++-1. Independent AI review of exact 001O source.
+++1. Independent AI review of exact 001P source.
++ 2. Create/identify canonical QuoaraAi GitHub repository after owner approval.
++-3. Commit exact 001O baseline and record commit SHA.
+++3. Commit exact 001P baseline and record commit SHA.
++ 4. Run manual `Verify QuoaraAi Source` CI workflow.
++ 5. Apply/verify migrations only against canonical `Self build` after owner approval.
++ 6. Build Android debug APK from the committed SHA and test login/device approval on the owner phone.
+++
+++
+++## Gemini review reconciliation
+++
+++See `GEMINI-REVIEW-RECONCILIATION-001P.md`. 001P accepts only findings supported by source or primary documentation.
++diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/CHANGESET-001O.diff /mnt/data/quoaraai001p/CHANGESET-001O.diff
++--- /mnt/data/quoaraai001o/CHANGESET-001O.diff	2026-09-28 21:18:48.943968766 +0000
+++++ /mnt/data/quoaraai001p/CHANGESET-001O.diff	1970-01-01 00:00:00.000000000 +0000
++@@ -1,978 +0,0 @@
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/.github/workflows/build-quoaraai-android.yml /mnt/data/quoaraai001o/.github/workflows/build-quoaraai-android.yml
++---- /mnt/data/quoaraai001n_run/quoaraai001n/.github/workflows/build-quoaraai-android.yml	2026-09-28 16:02:48.000000000 +0000
++-+++ /mnt/data/quoaraai001o/.github/workflows/build-quoaraai-android.yml	2026-09-28 21:13:17.113791798 +0000
++-@@ -41,7 +41,7 @@
++-       - name: Upload APK artifact
++-         uses: actions/upload-artifact@v4
++-         with:
++--          name: QuoaraAi-001M-owner-debug-apk
++-+          name: QuoaraAi-owner-debug-apk
++-           path: android/app/build/outputs/apk/debug/app-debug.apk
++-           if-no-files-found: error
++-           retention-days: 7
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/.github/workflows/verify-quoaraai.yml /mnt/data/quoaraai001o/.github/workflows/verify-quoaraai.yml
++---- /mnt/data/quoaraai001n_run/quoaraai001n/.github/workflows/verify-quoaraai.yml	1970-01-01 00:00:00.000000000 +0000
++-+++ /mnt/data/quoaraai001o/.github/workflows/verify-quoaraai.yml	2026-09-28 21:15:42.699539951 +0000
++-@@ -0,0 +1,45 @@
++-+name: Verify QuoaraAi Source
++-+
++-+on:
++-+  workflow_dispatch:
++-+
++-+permissions:
++-+  contents: read
++-+
++-+jobs:
++-+  backend:
++-+    runs-on: ubuntu-latest
++-+    timeout-minutes: 20
++-+    defaults:
++-+      run:
++-+        working-directory: backend
++-+    steps:
++-+      - name: Check out source
++-+        uses: actions/checkout@v5
++-+
++-+      - name: Set up Node 22
++-+        uses: actions/setup-node@v4
++-+        with:
++-+          node-version: '22'
++-+          cache: npm
++-+          cache-dependency-path: backend/package-lock.json
++-+
++-+      - name: Install locked dependencies
++-+        run: npm ci
++-+
++-+      - name: Lint
++-+        run: npm run lint
++-+
++-+      - name: Typecheck
++-+        run: npm run typecheck
++-+
++-+      - name: Test
++-+        run: npm test
++-+
++-+      - name: Production build
++-+        env:
++-+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
++-+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ci-placeholder-key
++-+          SUPABASE_SECRET_KEY: ci-placeholder-secret
++-+          QUOARAAI_OWNER_USER_ID: 00000000-0000-4000-8000-000000000000
++-+        run: npm run build
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/AI-REVIEW-HANDOFF-001O.md /mnt/data/quoaraai001o/AI-REVIEW-HANDOFF-001O.md
++---- /mnt/data/quoaraai001n_run/quoaraai001n/AI-REVIEW-HANDOFF-001O.md	1970-01-01 00:00:00.000000000 +0000
++-+++ /mnt/data/quoaraai001o/AI-REVIEW-HANDOFF-001O.md	2026-09-28 21:18:48.711963840 +0000
++-@@ -0,0 +1,36 @@
++-+# QuoaraAi 001O — External AI Review Handoff
++-+
++-+Maximum response: 12,000 characters.
++-+
++-+Review the exact 001O source package. Do not rewrite or mutate external systems. Return evidence-backed findings only.
++-+
++-+## Canonical identity
++-+- Project: QuoaraAi
++-+- Source version: 001O
++-+- Android: `com.imquoara.quoaraai`, `0.4.2-alpha`, versionCode 6, compile/target SDK 36, min SDK 28
++-+- Backend: `quoaraai-backend` 1.1.2
++-+- Canonical Supabase declared by owner: `Self build` / `csoimooaosncrrhaittf` / `ca-central-1`
++-+- Canonical GitHub repository: not yet created/verified
++-+
++-+## Focus review
++-+1. Verify the new signed-action binding and execution-time signature recheck.
++-+2. Review `20260928004000_owner_approval_integrity.sql` for PostgreSQL correctness, privilege safety, atomicity, and race conditions.
++-+3. Verify revoked devices cannot self-reactivate through the mobile registration flow.
++-+4. Verify the service-role application can still insert/select audit ledger rows after append-only privilege hardening.
++-+5. Find any path that could execute an image request whose prompt/model/cost differs from the device-signed action.
++-+6. Review auth/session/cookie/WebView behavior and exact-origin enforcement.
++-+7. Find compile/type/runtime defects and stale tests/documentation.
++-+8. Review all service-role use for confused-deputy or tenant-boundary issues.
++-+9. Review zero-dollar provider enforcement and any route that could silently fall back to paid usage.
++-+10. Identify the smallest safe changes needed before GitHub baseline + CI + APK build.
++-+
++-+For each finding label: PROVEN, LIKELY, or NEEDS RUNTIME VERIFICATION. Include file path/function, impact, and smallest safe fix.
++-+
++-+Finish with:
++-+- CRITICAL
++-+- HIGH
++-+- MEDIUM/LOW
++-+- CONFIRMED IMPROVEMENTS
++-+- CONTRADICTIONS
++-+- RUNTIME-ONLY CHECKS
++-+- TOP 5 NEXT ACTIONS
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/CANONICAL-PROJECT-STATE.md /mnt/data/quoaraai001o/CANONICAL-PROJECT-STATE.md
++---- /mnt/data/quoaraai001n_run/quoaraai001n/CANONICAL-PROJECT-STATE.md	2026-09-28 20:32:26.000000000 +0000
++-+++ /mnt/data/quoaraai001o/CANONICAL-PROJECT-STATE.md	2026-09-28 21:18:48.811965963 +0000
++-@@ -1,47 +1,61 @@
++- # QuoaraAi Canonical Project State
++- 
++--Baseline established from owner-supplied source archive on 2026-09-28.
++-+Updated: 2026-09-28
++- 
++- ## Canonical identity
++- - Product: **QuoaraAi**
++-+- Current local source baseline: **001O**
++- - Android application ID / namespace: `com.imquoara.quoaraai`
++--- Android version: `0.4.1-alpha` (`versionCode 5`)
++--- Backend package: `quoaraai-backend` `1.1.1`
++--- Canonical Supabase project declared by owner: `Self build` / `csoimooaosncrrhaittf` / `ca-central-1`
++-+- Android version: `0.4.2-alpha` (`versionCode 6`)
++-+- Backend package: `quoaraai-backend` `1.1.2`
++-+- Canonical Supabase declared by owner: `Self build` / `csoimooaosncrrhaittf` / `ca-central-1`
++- - Canonical GitHub repository: **not created/verified yet**
++--- Source baseline archive SHA-256: `f0f86a88f99e2a85fb43b706e6ff67893fe0600a9113187daaaa14b21db946b8`
++- 
++--## Baseline verification
++--Verified directly from source:
++--- Native Android shell exists.
++--- Android target/compile SDK is 36.
++--- Android min SDK is 28.
++--- Android Gradle Plugin is 9.4.0; intended Gradle is 9.6.0; JDK 17 is used by CI.
++--- Cleartext traffic is disabled at manifest and network-security-config level.
++--- WebView file/content access and mixed content are disabled.
++--- Backend is Next.js 16.3.6 + React 19.3.0 + Supabase SSR 0.12.7.
++--- Supabase migrations exist in source, including owner control and owner-device security migrations.
++--- No provider/API secret values were found in the source scan; `.env.example` contains placeholders only.
++--
++--## 001N stabilization changes prepared locally
++--- Require the Android backend configuration to be a root HTTPS origin (no path/query/fragment/userinfo).
++--- Restrict authentication WebView navigation to the exact configured HTTPS origin, including port semantics.
++--- Update stale Android user-agent version `0.3` -> `0.4`.
++--- Replace stale setup hint `self.example.com` -> `quoaraai.example.com`.
++--- Fix PWA icon reference to the existing `quoaraai-icon.svg`.
++--- Correct Android README minSdk from 26 -> 28.
++--- Correct APK workflow documentation path to `build-quoaraai-android.yml`.
++--- Add a root `.gitignore` for the future canonical repository.
++--- Remove bundled `node_modules` directories from the source handoff.
++--
++--## Verification limitations
++--The current sandbox could not complete `npm ci`, so backend typecheck/lint/tests/build are **not yet verified in this environment**. The failures observed after the incomplete install were missing dependency/type packages, not source-code test failures.
++--
++--The Android APK has **not yet been built in this environment** because Gradle/Android SDK tooling is not installed here. The included GitHub Actions workflow is intended to perform that build once the canonical repository exists.
++-+## Source lineage
++-+- Owner-supplied 001M SHA-256: `f0f86a88f99e2a85fb43b706e6ff67893fe0600a9113187daaaa14b21db946b8`
++-+- Stabilized 001N SHA-256: `2615a5eb59accc19092615e1e6336823acb41abc3f264581a2942cc2e950e866`
++-+- 001O archive SHA-256: recorded outside the archive after packaging.
++-+
++-+## Verified directly from source
++-+- Native Android owner shell exists.
++-+- Android compile/target SDK 36, min SDK 28.
++-+- Cleartext traffic disabled at manifest/network-security level.
++-+- Auth WebView disables file/content access and mixed content.
++-+- Backend is Next.js 16.3.6 / React 19.3.0 / Supabase SSR 0.12.7.
++-+- Owner-only server checks are present on protected API/page paths.
++-+- Supabase migrations exist for base schema, security patch, intelligence foundation, tenant guard, owner controls, owner devices, and 001O approval integrity.
++-+- Provider/API secrets are represented by placeholders in `.env.example`; static scan found no live secret values.
++-+
++-+## 001O security changes
++-+- Image action hashes are deterministically reconstructed from exact signed inputs.
++-+- Image execution re-verifies the stored Android P-256 signature and requires the approving device to remain active.
++-+- Exact challenge expiry text is persisted and bound to the database expiry instant.
++-+- Signed approval + ledger append is atomic through a server-only SQL RPC.
++-+- Web control decisions + ledger append are atomic through a server-only SQL RPC.
++-+- Owner-device registration + audit append is atomic; revoked keys cannot self-reactivate.
++-+- Owner and intelligence action ledgers are append-only to the application service role (select/insert only).
++-+- Android auth WebView delegates only HTTP/HTTPS off-origin links to the system browser.
++-+- Added manual backend CI verification workflow.
++-+
++-+## Local verification status
++-+PASS:
++-+- Package/package-lock identity and version consistency.
++-+- Android XML parsing.
++-+- Static secret scan.
++-+- Image-action tamper detection runtime check.
++-+- P-256 approval signature runtime check.
++-+
++-+NOT YET VERIFIED:
++-+- Full dependency install, lint, typecheck, test suite, production build.
++-+- Android APK compilation.
++-+- Live Supabase migration execution/state.
++-+- Runtime authentication against deployed backend.
++-+- GitHub commit/CI execution.
++- 
++- ## Next evidence gates
++--1. Create/identify the canonical `QuoaraAi` GitHub repository.
++--2. Commit this exact baseline and record commit SHA.
++--3. Run backend `npm ci`, lint, typecheck, tests, and production build in CI.
++--4. Run the manual Android APK workflow with an approved HTTPS backend origin.
++--5. Apply/verify Supabase migrations only after owner approval against the canonical `Self build` project.
++-+1. Independent AI review of exact 001O source.
++-+2. Create/identify canonical QuoaraAi GitHub repository after owner approval.
++-+3. Commit exact 001O baseline and record commit SHA.
++-+4. Run manual `Verify QuoaraAi Source` CI workflow.
++-+5. Apply/verify migrations only against canonical `Self build` after owner approval.
++-+6. Build Android debug APK from the committed SHA and test login/device approval on the owner phone.
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/HARDENING-001O.md /mnt/data/quoaraai001o/HARDENING-001O.md
++---- /mnt/data/quoaraai001n_run/quoaraai001n/HARDENING-001O.md	1970-01-01 00:00:00.000000000 +0000
++-+++ /mnt/data/quoaraai001o/HARDENING-001O.md	2026-09-28 21:18:48.811965963 +0000
++-@@ -0,0 +1,62 @@
++-+# QuoaraAi 001O — Approval Integrity Hardening
++-+
++-+001O is a local source-only hardening pass over 001N. It does not write GitHub, deploy, modify Supabase, spend provider credits, or change external permissions.
++-+
++-+## Verified issues corrected
++-+
++-+1. **Signed action binding at execution time**
++-+   - 001N verified the device signature when an action was approved, but image execution trusted the stored payload afterward.
++-+   - 001O deterministically recomputes the approved image action hash from owner ID, prompt, aspect ratio, mode, exact free-model candidates, routing policy, and zero-dollar ceiling.
++-+   - Execution re-verifies the stored Android P-256 approval signature against the exact action hash before any provider call.
++-+   - A revoked approving device now blocks execution.
++-+
++-+2. **Stable expiry binding**
++-+   - Approval challenges previously depended on the database timestamp string representation.
++-+   - 001O stores the exact challenge expiry string inside the action payload, compares it to the database expiry by instant, and uses the exact signed representation for verification.
++-+
++-+3. **Atomic signed approval + audit record**
++-+   - 001N updated an action to approved and then wrote the audit ledger separately.
++-+   - 001O adds `approve_owner_action_request(...)`, a server-only SQL function that updates the pending zero-dollar action and appends the approval ledger entry atomically.
++-+
++-+4. **Atomic control-console decision + audit record**
++-+   - `decideActionRequest` previously changed status before writing the ledger.
++-+   - 001O adds `decide_owner_action_request(...)` and routes decisions through the atomic function.
++-+
++-+5. **Atomic owner-device registration + audit record**
++-+   - Device registration previously upserted the device before attempting the ledger write.
++-+   - 001O adds `register_owner_device(...)` so registry mutation and audit append happen together.
++-+   - A revoked device key cannot silently reactivate itself through the registration endpoint.
++-+
++-+6. **Append-only application audit ledgers**
++-+   - Earlier migrations granted service-role update/delete rights to the ledger tables.
++-+   - 001O revokes update/delete/truncate from `owner_action_ledger` and `quoaraai_action_ledger`, leaving application access at select/insert.
++-+
++-+7. **Android external navigation hardening**
++-+   - The auth WebView no longer attempts to launch arbitrary non-HTTP(S) URI schemes externally.
++-+   - Only normal HTTP/HTTPS off-origin links are delegated to the system browser.
++-+
++-+8. **Version/workflow cleanup**
++-+   - Android: `0.4.2-alpha`, versionCode `6`.
++-+   - Backend: `1.1.2`.
++-+   - Android workflow artifact name is now version-neutral.
++-+   - Added a manual backend verification workflow for locked install, lint, typecheck, tests, and production build.
++-+
++-+## Verification performed locally
++-+
++-+- 001M SHA-256: `f0f86a88f99e2a85fb43b706e6ff67893fe0600a9113187daaaa14b21db946b8`
++-+- 001N SHA-256: `2615a5eb59accc19092615e1e6336823acb41abc3f264581a2942cc2e950e866`
++-+- Package/package-lock identity and version consistency: PASS.
++-+- Android manifest and network-security XML parsing: PASS.
++-+- Static secret-pattern scan: PASS; no live provider/API secret values found.
++-+- New image-action canonicalization/tamper checks executed under Node 22 type stripping: PASS.
++-+- P-256 approval challenge/signature runtime check: PASS.
++-+
++-+## Still not verified here
++-+
++-+- `npm ci`, ESLint, full TypeScript typecheck, full test suite, and `next build`: blocked because this sandbox cannot reach npm registry and the original archive did not contain usable dependency files.
++-+- Android Gradle compile/APK build: Android SDK/Gradle are not installed in this sandbox.
++-+- SQL migration execution against canonical Supabase: not performed.
++-+- Runtime login against a deployed QuoaraAi backend: not performed.
++-+- GitHub repository/commit/CI runs: not created or executed.
++-+
++-+These remain explicit evidence gates, not assumed successes.
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/android/app/build.gradle /mnt/data/quoaraai001o/android/app/build.gradle
++---- /mnt/data/quoaraai001n_run/quoaraai001n/android/app/build.gradle	2026-09-28 20:32:26.000000000 +0000
++-+++ /mnt/data/quoaraai001o/android/app/build.gradle	2026-09-28 21:13:17.113656153 +0000
++-@@ -10,8 +10,8 @@
++-         applicationId 'com.imquoara.quoaraai'
++-         minSdk 28
++-         targetSdk 36
++--        versionCode 5
++--        versionName '0.4.1-alpha'
++-+        versionCode 6
++-+        versionName '0.4.2-alpha'
++- 
++-         def configuredUrl = providers.gradleProperty('QUOARAAI_APP_URL').orNull ?: 'https://quoaraai.invalid'
++-         buildConfigField 'String', 'QUOARAAI_APP_URL', '"' + configuredUrl.replace('"', '\\"') + '"'
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java /mnt/data/quoaraai001o/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java
++---- /mnt/data/quoaraai001n_run/quoaraai001n/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java	2026-09-28 20:31:32.000000000 +0000
++-+++ /mnt/data/quoaraai001o/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java	2026-09-28 21:13:17.113740761 +0000
++-@@ -92,7 +92,7 @@
++-         save.setOnClickListener(v -> {
++-             String value = input.getText().toString();
++-             if (!BackendConfig.save(this, value)) {
++--                error.setText("Use a valid HTTPS URL with no embedded username/password.");
++-+                error.setText("Use a root HTTPS origin only, with no path, query, fragment, or embedded credentials.");
++-                 return;
++-             }
++-             appUrl = BackendConfig.load(this);
++-@@ -139,7 +139,7 @@
++-         s.setMediaPlaybackRequiresUserGesture(true);
++-         s.setSaveFormData(false);
++-         s.setSupportMultipleWindows(false);
++--        s.setUserAgentString(s.getUserAgentString() + " QuoaraAi-Android/0.4 AuthBootstrap");
++-+        s.setUserAgentString(s.getUserAgentString() + " QuoaraAi-Android/0.4.2 AuthBootstrap");
++- 
++-         CookieManager cookies = CookieManager.getInstance();
++-         cookies.setAcceptCookie(true);
++-@@ -150,7 +150,10 @@
++-                 Uri uri = request.getUrl();
++-                 String targetOrigin = BackendConfig.origin(uri.toString());
++-                 if (targetOrigin != null && allowedOrigin.equalsIgnoreCase(targetOrigin)) return false;
++--                try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); } catch (Exception ignored) {}
++-+                String scheme = uri.getScheme();
++-+                if ("https".equalsIgnoreCase(scheme) || "http".equalsIgnoreCase(scheme)) {
++-+                    try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); } catch (Exception ignored) {}
++-+                }
++-                 return true;
++-             }
++- 
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/package-lock.json /mnt/data/quoaraai001o/backend/package-lock.json
++---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/package-lock.json	2026-09-28 20:32:26.000000000 +0000
++-+++ /mnt/data/quoaraai001o/backend/package-lock.json	2026-09-28 21:13:17.113497935 +0000
++-@@ -1,12 +1,12 @@
++- {
++-   "name": "quoaraai-backend",
++--  "version": "1.1.1",
++-+  "version": "1.1.2",
++-   "lockfileVersion": 3,
++-   "requires": true,
++-   "packages": {
++-     "": {
++-       "name": "quoaraai-backend",
++--      "version": "1.1.1",
++-+      "version": "1.1.2",
++-       "dependencies": {
++-         "@google/genai": "2.24.0",
++-         "@supabase/ssr": "0.12.7",
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/package.json /mnt/data/quoaraai001o/backend/package.json
++---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/package.json	2026-09-28 20:32:26.000000000 +0000
++-+++ /mnt/data/quoaraai001o/backend/package.json	2026-09-28 21:13:17.110778059 +0000
++-@@ -1,6 +1,6 @@
++- {
++-   "name": "quoaraai-backend",
++--  "version": "1.1.1",
++-+  "version": "1.1.2",
++-   "private": true,
++-   "scripts": {
++-     "dev": "next dev",
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/image/prepare/route.ts /mnt/data/quoaraai001o/backend/src/app/api/image/prepare/route.ts
++---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/image/prepare/route.ts	2026-09-28 16:02:44.000000000 +0000
++-+++ /mnt/data/quoaraai001o/backend/src/app/api/image/prepare/route.ts	2026-09-28 21:15:10.906145386 +0000
++-@@ -1,6 +1,6 @@
++--import { createHash } from 'node:crypto';
++- import { buildApprovalChallenge, createApprovalNonce } from '@/lib/security/device-approval';
++--import { chooseFreeImageCandidates, type FreeImageMode } from '@/lib/cloudflare-image';
++-+import { prepareImageAction } from '@/lib/actions/image-action';
++-+import type { FreeImageMode } from '@/lib/cloudflare-image';
++- import { evaluateMediaPrompt } from '@/lib/content/policy';
++- import { isOwnerIdentity } from '@/lib/auth/owner';
++- import { bodyTooLarge, isSameOriginMutation } from '@/lib/security/request';
++-@@ -47,18 +47,8 @@
++-     return Response.json({ error: policy.reason ?? 'Prompt not allowed.', policy: policy.code }, { status: 400 });
++-   }
++- 
++--  const candidates = chooseFreeImageCandidates(mode, prompt, aspectRatio);
++--  const canonical = JSON.stringify({
++--    userId: data.user.id,
++--    action: 'generate_image',
++--    provider: 'cloudflare_workers_ai',
++--    routingPolicy: 'free_only_v1',
++--    candidates,
++--    prompt,
++--    aspectRatio,
++--    maxCostUsd: 0,
++--  });
++--  const actionHash = createHash('sha256').update(canonical).digest('hex');
++-+  const prepared = prepareImageAction({ userId: data.user.id, prompt, aspectRatio, mode });
++-+  const { candidates, actionHash } = prepared;
++-   const admin = createAdminClient();
++-   const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
++-   const approvalNonce = createApprovalNonce();
++-@@ -75,13 +65,14 @@
++-       payload: {
++-         action_hash: actionHash,
++-         provider: 'cloudflare_workers_ai',
++--        routing_policy: 'free_only_v1',
++-+        routing_policy: 'free_only_v2',
++-         candidates,
++-         prompt,
++-         aspect_ratio: aspectRatio,
++-         mode,
++-         max_cost_usd: 0,
++-         approval_nonce: approvalNonce,
++-+        approval_expires_at: expiresAt,
++-       },
++-       estimated_cost_usd: 0,
++-       status: 'pending',
++-@@ -104,7 +95,7 @@
++-     metadata: {
++-       action_hash: actionHash,
++-       provider: 'cloudflare_workers_ai',
++--      routing_policy: 'free_only_v1',
++-+      routing_policy: 'free_only_v2',
++-       candidates,
++-       estimated_cost_usd: 0,
++-     },
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/image/route.ts /mnt/data/quoaraai001o/backend/src/app/api/image/route.ts
++---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/image/route.ts	2026-09-28 16:02:44.000000000 +0000
++-+++ /mnt/data/quoaraai001o/backend/src/app/api/image/route.ts	2026-09-28 21:15:10.906497047 +0000
++-@@ -1,4 +1,6 @@
++--import { generateFreeCloudflareImage, type FreeImageCandidate } from '@/lib/cloudflare-image';
++-+import { validateStoredImageAction } from '@/lib/actions/image-action';
++-+import { buildApprovalChallenge, verifyP256Signature } from '@/lib/security/device-approval';
++-+import { generateFreeCloudflareImage } from '@/lib/cloudflare-image';
++- import { isOwnerIdentity } from '@/lib/auth/owner';
++- import { bodyTooLarge, isSameOriginMutation } from '@/lib/security/request';
++- import { createAdminClient } from '@/lib/supabase/admin';
++-@@ -6,20 +8,6 @@
++- 
++- const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
++- 
++--function validCandidates(value: unknown): value is FreeImageCandidate[] {
++--  return Array.isArray(value) && value.length > 0 && value.length <= 3 && value.every((candidate) => {
++--    if (!candidate || typeof candidate !== 'object') return false;
++--    const item = candidate as Record<string, unknown>;
++--    return typeof item.model === 'string'
++--      && item.model.startsWith('@cf/')
++--      && typeof item.width === 'number'
++--      && typeof item.height === 'number'
++--      && typeof item.steps === 'number'
++--      && typeof item.estimatedNeurons === 'number'
++--      && item.estimatedNeurons >= 0;
++--  });
++--}
++--
++- export async function POST(request: Request) {
++-   if (!isSameOriginMutation(request)) return Response.json({ error: 'Cross-site request blocked.' }, { status: 403 });
++-   if (bodyTooLarge(request, 8_192)) return Response.json({ error: 'Request too large.' }, { status: 413 });
++-@@ -55,25 +43,59 @@
++-     .eq('status', 'approved')
++-     .eq('estimated_cost_usd', 0)
++-     .gt('expires_at', now)
++--    .select('id,payload,estimated_cost_usd')
++-+    .select('id,payload,estimated_cost_usd,expires_at,approved_device_key_id,approval_signature_b64')
++-     .maybeSingle();
++- 
++-   if (claimError || !action) {
++-     return Response.json({ error: 'Approval is missing, expired, already used, or not a zero-dollar owner action.' }, { status: 428 });
++-   }
++- 
++--  const payload = action.payload && typeof action.payload === 'object' ? action.payload as Record<string, unknown> : {};
++--  const prompt = typeof payload.prompt === 'string' ? payload.prompt : '';
++--  const actionHash = typeof payload.action_hash === 'string' ? payload.action_hash : '';
++--  const provider = typeof payload.provider === 'string' ? payload.provider : '';
++--  const routingPolicy = typeof payload.routing_policy === 'string' ? payload.routing_policy : '';
++--  const candidates = payload.candidates;
++-+  const prepared = validateStoredImageAction(data.user.id, action.payload);
++-+  const approvedDeviceKeyId = typeof action.approved_device_key_id === 'string' ? action.approved_device_key_id : '';
++-+  const approvalSignature = typeof action.approval_signature_b64 === 'string' ? action.approval_signature_b64 : '';
++-+  const expiresAt = typeof action.expires_at === 'string' ? action.expires_at : '';
++- 
++--  if (!prompt || !actionHash || provider !== 'cloudflare_workers_ai' || routingPolicy !== 'free_only_v1' || !validCandidates(candidates)) {
++-+  if (!prepared || !approvedDeviceKeyId || !approvalSignature || !expiresAt) {
++-     await admin.from('owner_action_requests').update({ status: 'failed' }).eq('id', actionRequestId);
++--    return Response.json({ error: 'Approved free action payload is invalid. No provider call was made.' }, { status: 409 });
++-+    return Response.json({ error: 'Approved action is not bound to a valid signed payload. No provider call was made.' }, { status: 409 });
++-   }
++- 
++-+
++-+  const rowExpiryMs = Date.parse(expiresAt);
++-+  const signedExpiryMs = Date.parse(prepared.approvalExpiresAt);
++-+  if (!Number.isFinite(rowExpiryMs) || !Number.isFinite(signedExpiryMs) || rowExpiryMs !== signedExpiryMs) {
++-+    await admin.from('owner_action_requests').update({ status: 'failed' }).eq('id', actionRequestId);
++-+    return Response.json({ error: 'Approved action expiry binding is invalid. No provider call was made.' }, { status: 409 });
++-+  }
++-+
++-+  const { data: device, error: deviceError } = await admin
++-+    .from('owner_devices')
++-+    .select('public_key_spki_b64,status')
++-+    .eq('user_id', data.user.id)
++-+    .eq('device_key_id', approvedDeviceKeyId)
++-+    .eq('status', 'active')
++-+    .maybeSingle();
++-+
++-+  if (deviceError || !device) {
++-+    await admin.from('owner_action_requests').update({ status: 'failed' }).eq('id', actionRequestId);
++-+    return Response.json({ error: 'Approving owner device is unavailable or revoked. No provider call was made.' }, { status: 403 });
++-+  }
++-+
++-+  const challenge = buildApprovalChallenge({
++-+    actionRequestId,
++-+    actionHash: prepared.actionHash,
++-+    expiresAt: prepared.approvalExpiresAt,
++-+    nonce: prepared.approvalNonce,
++-+  });
++-+  if (!verifyP256Signature(device.public_key_spki_b64, challenge, approvalSignature)) {
++-+    await admin.from('owner_action_requests').update({ status: 'failed' }).eq('id', actionRequestId);
++-+    return Response.json({ error: 'Stored owner approval no longer verifies. No provider call was made.' }, { status: 403 });
++-+  }
++-+
++-+  const { prompt, actionHash, candidates } = prepared;
++-+  const provider = 'cloudflare_workers_ai';
++-+  const routingPolicy = 'free_only_v2';
++-+
++-   const { error: startLedgerError } = await admin.from('owner_action_ledger').insert({
++-     user_id: data.user.id,
++-     action_request_id: actionRequestId,
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/mobile/actions/approve/route.ts /mnt/data/quoaraai001o/backend/src/app/api/mobile/actions/approve/route.ts
++---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/mobile/actions/approve/route.ts	2026-09-28 16:02:44.000000000 +0000
++-+++ /mnt/data/quoaraai001o/backend/src/app/api/mobile/actions/approve/route.ts	2026-09-28 21:15:10.906396345 +0000
++-@@ -38,7 +38,8 @@
++- 
++-   if (actionError || deviceError) return Response.json({ error: 'Signed approval registry is unavailable.' }, { status: 503 });
++-   if (!action || !device) return Response.json({ error: 'Pending action or registered owner device not found.' }, { status: 404 });
++--  if (typeof action.expires_at !== 'string' || action.expires_at <= now) return Response.json({ error: 'Action approval expired.' }, { status: 410 });
++-+  const expiresAtMs = typeof action.expires_at === 'string' ? Date.parse(action.expires_at) : NaN;
++-+  if (!Number.isFinite(expiresAtMs) || expiresAtMs <= Date.now()) return Response.json({ error: 'Action approval expired.' }, { status: 410 });
++-   if (Number(action.estimated_cost_usd ?? 0) !== 0) {
++-     return Response.json({ error: 'This mobile fast-path only approves actions with a $0 provider-cost ceiling.' }, { status: 402 });
++-   }
++-@@ -46,36 +47,37 @@
++-   const payload = action.payload && typeof action.payload === 'object' ? action.payload as Record<string, unknown> : {};
++-   const actionHash = typeof payload.action_hash === 'string' ? payload.action_hash : '';
++-   const nonce = typeof payload.approval_nonce === 'string' ? payload.approval_nonce : '';
++--  if (!actionHash || !nonce) return Response.json({ error: 'Action does not contain a device-signable challenge.' }, { status: 409 });
++-+  const approvalExpiresAt = typeof payload.approval_expires_at === 'string' ? payload.approval_expires_at : '';
++-+  const approvalExpiresAtMs = Date.parse(approvalExpiresAt);
++-+  if (!actionHash || !nonce || !approvalExpiresAt || !Number.isFinite(approvalExpiresAtMs)) {
++-+    return Response.json({ error: 'Action does not contain a device-signable challenge.' }, { status: 409 });
++-+  }
++-+  if (approvalExpiresAtMs !== expiresAtMs) {
++-+    return Response.json({ error: 'Action approval expiry binding is invalid.' }, { status: 409 });
++-+  }
++- 
++--  const challenge = buildApprovalChallenge({ actionRequestId: id, actionHash, expiresAt: action.expires_at, nonce });
++-+  const challenge = buildApprovalChallenge({ actionRequestId: id, actionHash, expiresAt: approvalExpiresAt, nonce });
++-   if (!verifyP256Signature(device.public_key_spki_b64, challenge, signature)) {
++-     return Response.json({ error: 'Owner device signature is invalid.' }, { status: 403 });
++-   }
++- 
++--  const { data: approved, error: approveError } = await admin.from('owner_action_requests')
++--    .update({
++--      status: 'approved',
++--      decided_at: now,
++--      approved_device_key_id: keyId,
++--      approval_signature_b64: signature,
++--    })
++--    .eq('id', id).eq('user_id', auth.user.id).eq('status', 'pending')
++--    .select('id,kind,title,status,risk,reversible').maybeSingle();
++--
++--  if (approveError) return Response.json({ error: 'Could not record signed approval.' }, { status: 503 });
++--  if (!approved) return Response.json({ error: 'Action was already decided.' }, { status: 409 });
++--
++--  const { error: ledgerError } = await admin.from('owner_action_ledger').insert({
++--    user_id: auth.user.id,
++--    action_request_id: id,
++--    action_type: approved.kind,
++--    summary: `Device-approved: ${approved.title}`,
++--    status: 'approved',
++--    metadata: { device_key_id: keyId, action_hash: actionHash, risk: approved.risk, reversible: approved.reversible },
++-+  const { data: approvedRows, error: approveError } = await admin.rpc('approve_owner_action_request', {
++-+    p_user_id: auth.user.id,
++-+    p_action_request_id: id,
++-+    p_device_key_id: keyId,
++-+    p_signature_b64: signature,
++-+    p_action_hash: actionHash,
++-   });
++--  if (ledgerError) return Response.json({ error: 'Approval was recorded but audit ledger write failed.' }, { status: 503 });
++- 
++--  await admin.from('owner_devices').update({ last_seen_at: now }).eq('user_id', auth.user.id).eq('device_key_id', keyId);
++-+  if (approveError) return Response.json({ error: 'Could not atomically record signed approval.' }, { status: 503 });
++-+  const approved = Array.isArray(approvedRows) ? approvedRows[0] : null;
++-+  if (!approved) return Response.json({ error: 'Action was already decided, expired, changed, or is not zero-dollar.' }, { status: 409 });
++-+
++-+  const { error: seenError } = await admin.from('owner_devices')
++-+    .update({ last_seen_at: now })
++-+    .eq('user_id', auth.user.id)
++-+    .eq('device_key_id', keyId);
++-+  if (seenError) console.error('Owner device last_seen update failed:', seenError);
++-+
++-   return Response.json(approved, { headers: { 'Cache-Control': 'no-store' } });
++- }
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/mobile/device/route.ts /mnt/data/quoaraai001o/backend/src/app/api/mobile/device/route.ts
++---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/app/api/mobile/device/route.ts	2026-09-28 16:02:44.000000000 +0000
++-+++ /mnt/data/quoaraai001o/backend/src/app/api/mobile/device/route.ts	2026-09-28 21:17:12.009520972 +0000
++-@@ -59,24 +59,18 @@
++-     return Response.json({ error: 'Device proof signature is invalid.' }, { status: 403 });
++-   }
++- 
++--  const now = new Date().toISOString();
++-   const admin = createAdminClient();
++--  const { data, error } = await admin.from('owner_devices').upsert({
++--    user_id: user.id,
++--    device_key_id: keyId,
++--    public_key_spki_b64: publicKey,
++--    label: label || 'Android Owner Device',
++--    status: 'active',
++--    last_seen_at: now,
++--  }, { onConflict: 'user_id,device_key_id' }).select('device_key_id,label,status,created_at,last_seen_at').single();
++-+  const { data: rows, error } = await admin.rpc('register_owner_device', {
++-+    p_user_id: user.id,
++-+    p_device_key_id: keyId,
++-+    p_public_key_spki_b64: publicKey,
++-+    p_label: label || 'Android Owner Device',
++-+  });
++- 
++-   if (error) return Response.json({ error: 'Owner device registry is not ready.' }, { status: 503 });
++--  await admin.from('owner_action_ledger').insert({
++--    user_id: user.id,
++--    action_type: 'register_owner_device',
++--    summary: `Registered owner device: ${data.label}`,
++--    status: 'executed',
++--    metadata: { device_key_id: keyId },
++--  });
++--  return Response.json({ registered: true, device: data }, { status: 201, headers: { 'Cache-Control': 'no-store' } });
++-+  const device = Array.isArray(rows) ? rows[0] : null;
++-+  if (!device) {
++-+    return Response.json({ error: 'This device key is revoked and cannot reactivate itself.' }, { status: 409 });
++-+  }
++-+  return Response.json({ registered: true, device }, { status: 201, headers: { 'Cache-Control': 'no-store' } });
++- }
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/lib/actions/image-action.ts /mnt/data/quoaraai001o/backend/src/lib/actions/image-action.ts
++---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/lib/actions/image-action.ts	1970-01-01 00:00:00.000000000 +0000
++-+++ /mnt/data/quoaraai001o/backend/src/lib/actions/image-action.ts	2026-09-28 21:15:10.906293680 +0000
++-@@ -0,0 +1,84 @@
++-+import { createHash } from 'node:crypto';
++-+import {
++-+  chooseFreeImageCandidates,
++-+  type FreeImageCandidate,
++-+  type FreeImageMode,
++-+} from '@/lib/cloudflare-image';
++-+
++-+const ALLOWED_ASPECTS = new Set(['1:1', '4:3', '3:4', '16:9', '9:16']);
++-+const ALLOWED_MODES = new Set<FreeImageMode>(['auto', 'fast', 'leonardo']);
++-+
++-+export type PreparedImageAction = {
++-+  prompt: string;
++-+  aspectRatio: string;
++-+  mode: FreeImageMode;
++-+  candidates: FreeImageCandidate[];
++-+  actionHash: string;
++-+};
++-+
++-+function canonicalImageAction(input: {
++-+  userId: string;
++-+  prompt: string;
++-+  aspectRatio: string;
++-+  mode: FreeImageMode;
++-+  candidates: FreeImageCandidate[];
++-+}) {
++-+  return JSON.stringify({
++-+    userId: input.userId,
++-+    action: 'generate_image',
++-+    provider: 'cloudflare_workers_ai',
++-+    routingPolicy: 'free_only_v2',
++-+    candidates: input.candidates,
++-+    prompt: input.prompt,
++-+    aspectRatio: input.aspectRatio,
++-+    mode: input.mode,
++-+    maxCostUsd: 0,
++-+  });
++-+}
++-+
++-+export function prepareImageAction(input: {
++-+  userId: string;
++-+  prompt: string;
++-+  aspectRatio: string;
++-+  mode: FreeImageMode;
++-+}): PreparedImageAction {
++-+  const candidates = chooseFreeImageCandidates(input.mode, input.prompt, input.aspectRatio);
++-+  const actionHash = createHash('sha256')
++-+    .update(canonicalImageAction({ ...input, candidates }))
++-+    .digest('hex');
++-+
++-+  return { ...input, candidates, actionHash };
++-+}
++-+
++-+function sameCandidates(left: unknown, right: FreeImageCandidate[]) {
++-+  if (!Array.isArray(left)) return false;
++-+  return JSON.stringify(left) === JSON.stringify(right);
++-+}
++-+
++-+export function validateStoredImageAction(
++-+  userId: string,
++-+  payload: unknown,
++-+): (PreparedImageAction & { approvalNonce: string; approvalExpiresAt: string }) | null {
++-+  if (!payload || typeof payload !== 'object') return null;
++-+  const value = payload as Record<string, unknown>;
++-+
++-+  const prompt = typeof value.prompt === 'string' ? value.prompt : '';
++-+  const aspectRatio = typeof value.aspect_ratio === 'string' ? value.aspect_ratio : '';
++-+  const rawMode = typeof value.mode === 'string' ? value.mode : '';
++-+  const mode = ALLOWED_MODES.has(rawMode as FreeImageMode) ? rawMode as FreeImageMode : null;
++-+  const approvalNonce = typeof value.approval_nonce === 'string' ? value.approval_nonce : '';
++-+  const storedHash = typeof value.action_hash === 'string' ? value.action_hash : '';
++-+  const approvalExpiresAt = typeof value.approval_expires_at === 'string' ? value.approval_expires_at : '';
++-+
++-+  if (!prompt || prompt.length > 2048 || !ALLOWED_ASPECTS.has(aspectRatio) || !mode || !approvalNonce || !storedHash || !approvalExpiresAt || !Number.isFinite(Date.parse(approvalExpiresAt))) {
++-+    return null;
++-+  }
++-+  if (value.provider !== 'cloudflare_workers_ai' || value.routing_policy !== 'free_only_v2' || Number(value.max_cost_usd) !== 0) {
++-+    return null;
++-+  }
++-+
++-+  const prepared = prepareImageAction({ userId, prompt, aspectRatio, mode });
++-+  if (prepared.actionHash !== storedHash || !sameCandidates(value.candidates, prepared.candidates)) return null;
++-+
++-+  return { ...prepared, approvalNonce, approvalExpiresAt };
++-+}
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/quoaraai/store.ts /mnt/data/quoaraai001o/backend/src/quoaraai/store.ts
++---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/src/quoaraai/store.ts	2026-09-28 16:02:44.000000000 +0000
++-+++ /mnt/data/quoaraai001o/backend/src/quoaraai/store.ts	2026-09-28 21:16:43.631717377 +0000
++-@@ -41,29 +41,14 @@
++- }
++- 
++- export async function decideActionRequest(userId: string, id: string, decision: 'approved' | 'rejected') {
++--  const now = new Date().toISOString();
++-   const admin = createAdminClient();
++--  const { data, error } = await admin
++--    .from('owner_action_requests')
++--    .update({ status: decision, decided_at: now })
++--    .eq('id', id)
++--    .eq('user_id', userId)
++--    .eq('status', 'pending')
++--    .select('id,kind,title,status,risk,reversible')
++--    .maybeSingle();
++--  if (error) throw error;
++--  if (!data) return null;
++--
++--  const { error: ledgerError } = await admin.from('owner_action_ledger').insert({
++--    user_id: userId,
++--    action_request_id: id,
++--    action_type: data.kind,
++--    summary: `${decision === 'approved' ? 'Approved' : 'Rejected'}: ${data.title}`,
++--    status: decision,
++--    metadata: { risk: data.risk, reversible: data.reversible },
++-+  const { data, error } = await admin.rpc('decide_owner_action_request', {
++-+    p_user_id: userId,
++-+    p_action_request_id: id,
++-+    p_decision: decision,
++-   });
++--  if (ledgerError) throw ledgerError;
++--  return data;
++-+  if (error) throw error;
++-+  return Array.isArray(data) ? data[0] ?? null : null;
++- }
++- 
++- export async function listProjects(userId: string) {
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/supabase/migrations/20260928004000_owner_approval_integrity.sql /mnt/data/quoaraai001o/backend/supabase/migrations/20260928004000_owner_approval_integrity.sql
++---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/supabase/migrations/20260928004000_owner_approval_integrity.sql	1970-01-01 00:00:00.000000000 +0000
++-+++ /mnt/data/quoaraai001o/backend/supabase/migrations/20260928004000_owner_approval_integrity.sql	2026-09-28 21:17:12.009327130 +0000
++-@@ -0,0 +1,189 @@
++-+begin;
++-+
++-+-- Signed approvals must update the action request and append its approval ledger
++-+-- entry in the same database transaction. The API verifies the Android P-256
++-+-- signature first; this function atomically records the already-verified result.
++-+create or replace function public.approve_owner_action_request(
++-+  p_user_id uuid,
++-+  p_action_request_id uuid,
++-+  p_device_key_id text,
++-+  p_signature_b64 text,
++-+  p_action_hash text
++-+)
++-+returns table (
++-+  id uuid,
++-+  kind text,
++-+  title text,
++-+  status text,
++-+  risk text,
++-+  reversible boolean
++-+)
++-+language sql
++-+security definer
++-+set search_path = ''
++-+as $$
++-+  with updated as (
++-+    update public.owner_action_requests as ar
++-+       set status = 'approved',
++-+           decided_at = clock_timestamp(),
++-+           approved_device_key_id = p_device_key_id,
++-+           approval_signature_b64 = p_signature_b64
++-+     where ar.id = p_action_request_id
++-+       and ar.user_id = p_user_id
++-+       and ar.status = 'pending'
++-+       and ar.estimated_cost_usd = 0
++-+       and ar.expires_at > clock_timestamp()
++-+       and ar.payload->>'action_hash' = p_action_hash
++-+    returning ar.id, ar.kind, ar.title, ar.status, ar.risk, ar.reversible
++-+  ), logged as (
++-+    insert into public.owner_action_ledger (
++-+      user_id,
++-+      action_request_id,
++-+      action_type,
++-+      summary,
++-+      status,
++-+      metadata
++-+    )
++-+    select
++-+      p_user_id,
++-+      u.id,
++-+      u.kind,
++-+      'Device-approved: ' || u.title,
++-+      'approved',
++-+      jsonb_build_object(
++-+        'device_key_id', p_device_key_id,
++-+        'action_hash', p_action_hash,
++-+        'risk', u.risk,
++-+        'reversible', u.reversible
++-+      )
++-+    from updated u
++-+    returning action_request_id
++-+  )
++-+  select u.id, u.kind, u.title, u.status, u.risk, u.reversible
++-+    from updated u
++-+    join logged l on l.action_request_id = u.id;
++-+$$;
++-+
++-+revoke execute on function public.approve_owner_action_request(uuid, uuid, text, text, text)
++-+  from public, anon, authenticated;
++-+grant execute on function public.approve_owner_action_request(uuid, uuid, text, text, text)
++-+  to service_role;
++-+
++-+-- Device registration and its audit event are atomic. A revoked key cannot silently
++-+-- reactivate itself; re-enabling a revoked device requires an explicit administrative
++-+-- recovery path rather than another signed registration request from that key.
++-+create or replace function public.register_owner_device(
++-+  p_user_id uuid,
++-+  p_device_key_id text,
++-+  p_public_key_spki_b64 text,
++-+  p_label text
++-+)
++-+returns table (
++-+  device_key_id text,
++-+  label text,
++-+  status text,
++-+  created_at timestamptz,
++-+  last_seen_at timestamptz
++-+)
++-+language sql
++-+security definer
++-+set search_path = ''
++-+as $$
++-+  with upserted as (
++-+    insert into public.owner_devices as d (
++-+      user_id, device_key_id, public_key_spki_b64, label, status, last_seen_at
++-+    )
++-+    values (
++-+      p_user_id, p_device_key_id, p_public_key_spki_b64, p_label, 'active', clock_timestamp()
++-+    )
++-+    on conflict (user_id, device_key_id) do update
++-+      set public_key_spki_b64 = excluded.public_key_spki_b64,
++-+          label = excluded.label,
++-+          last_seen_at = clock_timestamp()
++-+      where d.status = 'active'
++-+    returning d.device_key_id, d.label, d.status, d.created_at, d.last_seen_at
++-+  ), logged as (
++-+    insert into public.owner_action_ledger (
++-+      user_id, action_type, summary, status, metadata
++-+    )
++-+    select
++-+      p_user_id,
++-+      'register_owner_device',
++-+      'Registered owner device: ' || u.label,
++-+      'executed',
++-+      jsonb_build_object('device_key_id', u.device_key_id)
++-+    from upserted u
++-+    returning id
++-+  )
++-+  select u.device_key_id, u.label, u.status, u.created_at, u.last_seen_at
++-+    from upserted u
++-+   where exists (select 1 from logged);
++-+$$;
++-+
++-+revoke execute on function public.register_owner_device(uuid, text, text, text)
++-+  from public, anon, authenticated;
++-+grant execute on function public.register_owner_device(uuid, text, text, text)
++-+  to service_role;
++-+
++-+-- Browser/control-console decisions also update the request and append its audit
++-+-- event atomically. Device-signature policy is enforced by the API before this
++-+-- function is called.
++-+create or replace function public.decide_owner_action_request(
++-+  p_user_id uuid,
++-+  p_action_request_id uuid,
++-+  p_decision text
++-+)
++-+returns table (
++-+  id uuid,
++-+  kind text,
++-+  title text,
++-+  status text,
++-+  risk text,
++-+  reversible boolean
++-+)
++-+language sql
++-+security definer
++-+set search_path = ''
++-+as $$
++-+  with updated as (
++-+    update public.owner_action_requests as ar
++-+       set status = p_decision,
++-+           decided_at = clock_timestamp()
++-+     where ar.id = p_action_request_id
++-+       and ar.user_id = p_user_id
++-+       and ar.status = 'pending'
++-+       and p_decision in ('approved', 'rejected')
++-+    returning ar.id, ar.kind, ar.title, ar.status, ar.risk, ar.reversible
++-+  ), logged as (
++-+    insert into public.owner_action_ledger (
++-+      user_id, action_request_id, action_type, summary, status, metadata
++-+    )
++-+    select
++-+      p_user_id,
++-+      u.id,
++-+      u.kind,
++-+      case when p_decision = 'approved' then 'Approved: ' else 'Rejected: ' end || u.title,
++-+      p_decision,
++-+      jsonb_build_object('risk', u.risk, 'reversible', u.reversible)
++-+    from updated u
++-+    returning action_request_id
++-+  )
++-+  select u.id, u.kind, u.title, u.status, u.risk, u.reversible
++-+    from updated u
++-+    join logged l on l.action_request_id = u.id;
++-+$$;
++-+
++-+revoke execute on function public.decide_owner_action_request(uuid, uuid, text)
++-+  from public, anon, authenticated;
++-+grant execute on function public.decide_owner_action_request(uuid, uuid, text)
++-+  to service_role;
++-+
++-+-- These tables are append-only audit records. Application code may read and append,
++-+-- but it must not rewrite or delete history through the service-role client.
++-+revoke update, delete, truncate on table public.owner_action_ledger from service_role;
++-+grant select, insert on table public.owner_action_ledger to service_role;
++-+
++-+revoke update, delete, truncate on table public.quoaraai_action_ledger from service_role;
++-+grant select, insert on table public.quoaraai_action_ledger to service_role;
++-+
++-+commit;
++-diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=CHANGESET-001O.diff' /mnt/data/quoaraai001n_run/quoaraai001n/backend/tests/quoaraai.test.ts /mnt/data/quoaraai001o/backend/tests/quoaraai.test.ts
++---- /mnt/data/quoaraai001n_run/quoaraai001n/backend/tests/quoaraai.test.ts	2026-09-28 16:02:44.000000000 +0000
++-+++ /mnt/data/quoaraai001o/backend/tests/quoaraai.test.ts	2026-09-28 21:17:12.009585830 +0000
++-@@ -78,11 +78,32 @@
++-   assert.match(sql, /before insert or update of user_id, project_id/i);
++- });
++- 
++--test('paid image route is disabled by default and requires exact cost approval', () => {
++-+test('free image route is disabled by default and execution re-verifies signed approval', () => {
++-   const route = readFileSync('src/app/api/image/route.ts', 'utf8');
++-+  const prepare = readFileSync('src/app/api/image/prepare/route.ts', 'utf8');
++-+  const actionBinding = readFileSync('src/lib/actions/image-action.ts', 'utf8');
++-   const env = readFileSync('.env.example', 'utf8');
++-+
++-   assert.match(env, /QUOARAAI_IMAGE_GENERATION_ENABLED=false/);
++--  assert.match(route, /Exact owner cost approval is required/i);
++--  assert.match(route, /Approval ledger is unavailable\. Paid generation was not executed\./i);
++--  assert.match(route, /createHash\('sha256'\)/i);
++-+  assert.match(prepare, /approval_expires_at/);
++-+  assert.match(prepare, /free_only_v2/);
++-+  assert.match(actionBinding, /createHash\('sha256'\)/i);
++-+  assert.match(actionBinding, /chooseFreeImageCandidates/);
++-+  assert.match(route, /validateStoredImageAction/);
++-+  assert.match(route, /verifyP256Signature/);
++-+  assert.match(route, /owner_devices/);
++-+  assert.match(route, /No provider call was made/i);
++-+  assert.doesNotMatch(route, /paid fallback/i);
++-+});
++-+
++-+test('owner approval integrity migration makes signed approval + ledger atomic and ledgers append-only', () => {
++-+  const sql = readFileSync('supabase/migrations/20260928004000_owner_approval_integrity.sql', 'utf8');
++-+  assert.match(sql, /create or replace function public\.approve_owner_action_request/i);
++-+  assert.match(sql, /ar\.payload->>'action_hash' = p_action_hash/i);
++-+  assert.match(sql, /insert into public\.owner_action_ledger/i);
++-+  assert.match(sql, /create or replace function public\.register_owner_device/i);
++-+  assert.match(sql, /where d\.status = 'active'/i);
++-+  assert.match(sql, /create or replace function public\.decide_owner_action_request/i);
++-+  assert.match(sql, /revoke update, delete, truncate on table public\.owner_action_ledger from service_role/i);
++-+  assert.match(sql, /revoke update, delete, truncate on table public\.quoaraai_action_ledger from service_role/i);
++- });
+diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/GEMINI-REVIEW-RECONCILIATION-001P.md /mnt/data/quoaraai001p/GEMINI-REVIEW-RECONCILIATION-001P.md
+--- /mnt/data/quoaraai001o/GEMINI-REVIEW-RECONCILIATION-001P.md	1970-01-01 00:00:00.000000000 +0000
++++ /mnt/data/quoaraai001p/GEMINI-REVIEW-RECONCILIATION-001P.md	2026-09-28 21:35:10.619477839 +0000
+@@ -0,0 +1,43 @@
++# QuoaraAi 001P — Gemini review reconciliation
++
++Date: 2026-09-28
++Baseline reviewed: 001O
++Resulting baseline: 001P
++
++## Accepted / implemented
++
++1. **External WebView navigation hardening**
++   - 001O already blocked custom schemes because only `http`/`https` were delegated to `ACTION_VIEW` and every other scheme returned `true` without launching.
++   - 001P tightens this further: only **off-origin HTTPS** may open in the system browser. Plain HTTP and custom schemes are blocked.
++
++2. **Dependency security gate in CI**
++   - Added `npm audit --omit=dev --audit-level=high` after `npm ci` in `.github/workflows/verify-quoaraai.yml`.
++   - This is a build-time gate, not proof that the current source is vulnerability-free until CI runs successfully.
++
++## Rejected / corrected findings
++
++### "Next.js 16.3.6 is vulnerable to GHSA-vcvr-r3jv-pc5j"
++Rejected. The official Next.js advisory lists affected versions as `>=16.2.0 <16.3.6` and **16.3.6 as the patched version** for that Sep. 22, 2026 critical `next/og` ImageResponse issue.
++
++A separate scheduled Next.js security release, 16.3.7, is announced for Sep. 30, 2026. As of Sep. 28 it is not yet the current released patch. QuoaraAi should evaluate and upgrade to 16.3.7 promptly once released and compatible; it must not pin a nonexistent/unreleased version.
++
++### "Custom URI schemes can trigger arbitrary intents from the auth WebView"
++Rejected for 001O. The inspected code delegated only `http` and `https` to `ACTION_VIEW`; `intent:`, `tel:`, `mailto:` and other schemes returned `true` and were not launched. 001P nevertheless tightens external delegation to HTTPS only.
++
++### "Approval RPC needs explicit BEGIN/COMMIT and SERIALIZABLE/FOR UPDATE"
++Rejected as a required source fix. PostgreSQL SQL functions run inside the caller transaction and SQL functions cannot issue transaction-control commands such as `COMMIT`. The approval RPC performs a conditional `UPDATE ... WHERE status='pending'`, and PostgreSQL serializes competing row writers through row locking. A second concurrent approval cannot update the same row after the first changes its status.
++
++Runtime concurrency tests against the canonical Supabase project remain required before production deployment.
++
++### "Audit trigger must stop UPDATE/DELETE even for superusers"
++Not adopted as stated. 001O already revokes `UPDATE`, `DELETE`, and `TRUNCATE` from the application `service_role` and grants only `SELECT`/`INSERT` on the ledgers. A database superuser/owner is a fundamentally higher trust boundary and cannot be made meaningfully tamper-proof merely by adding a normal trigger, since sufficiently privileged database roles can alter/disable database objects.
++
++For stronger forensic guarantees later, use an external append-only/tamper-evident audit sink or cryptographic ledger chaining in addition to database permissions.
++
++## Still requires runtime verification
++
++- Canonical Supabase migration application and concurrency behavior.
++- `npm ci`, production dependency audit, lint, typecheck, tests, and `next build`.
++- Android Gradle build and APK installation.
++- Physical-device P-256 / biometric flow.
++- End-to-end login and action approval against a deployed HTTPS backend.
+diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/android/app/build.gradle /mnt/data/quoaraai001p/android/app/build.gradle
+--- /mnt/data/quoaraai001o/android/app/build.gradle	2026-09-28 21:13:17.113656153 +0000
++++ /mnt/data/quoaraai001p/android/app/build.gradle	2026-09-28 21:35:10.463770926 +0000
+@@ -10,7 +10,7 @@
+         applicationId 'com.imquoara.quoaraai'
+         minSdk 28
+         targetSdk 36
+-        versionCode 6
++        versionCode 7
+         versionName '0.4.2-alpha'
+ 
+         def configuredUrl = providers.gradleProperty('QUOARAAI_APP_URL').orNull ?: 'https://quoaraai.invalid'
+diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java /mnt/data/quoaraai001p/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java
+--- /mnt/data/quoaraai001o/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java	2026-09-28 21:13:17.113740761 +0000
++++ /mnt/data/quoaraai001p/android/app/src/main/java/com/imquoara/quoaraai/MainActivity.java	2026-09-28 21:35:09.093661484 +0000
+@@ -151,7 +151,9 @@
+                 String targetOrigin = BackendConfig.origin(uri.toString());
+                 if (targetOrigin != null && allowedOrigin.equalsIgnoreCase(targetOrigin)) return false;
+                 String scheme = uri.getScheme();
+-                if ("https".equalsIgnoreCase(scheme) || "http".equalsIgnoreCase(scheme)) {
++                // Off-origin HTTPS links may leave the auth WebView for the system browser.
++                // Insecure HTTP and custom schemes (intent:, tel:, mailto:, etc.) are blocked.
++                if ("https".equalsIgnoreCase(scheme)) {
+                     try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); } catch (Exception ignored) {}
+                 }
+                 return true;
+diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/backend/package-lock.json /mnt/data/quoaraai001p/backend/package-lock.json
+--- /mnt/data/quoaraai001o/backend/package-lock.json	2026-09-28 21:13:17.113497935 +0000
++++ /mnt/data/quoaraai001p/backend/package-lock.json	2026-09-28 21:35:10.464174575 +0000
+@@ -1,12 +1,12 @@
+ {
+   "name": "quoaraai-backend",
+-  "version": "1.1.2",
++  "version": "1.1.3",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "quoaraai-backend",
+-      "version": "1.1.2",
++      "version": "1.1.3",
+       "dependencies": {
+         "@google/genai": "2.24.0",
+         "@supabase/ssr": "0.12.7",
+diff -ruN '--exclude=SOURCE-MANIFEST-001O.sha256' '--exclude=SOURCE-MANIFEST-001P.sha256' /mnt/data/quoaraai001o/backend/package.json /mnt/data/quoaraai001p/backend/package.json
+--- /mnt/data/quoaraai001o/backend/package.json	2026-09-28 21:13:17.110778059 +0000
++++ /mnt/data/quoaraai001p/backend/package.json	2026-09-28 21:35:10.463919350 +0000
+@@ -1,6 +1,6 @@
+ {
+   "name": "quoaraai-backend",
+-  "version": "1.1.2",
++  "version": "1.1.3",
+   "private": true,
+   "scripts": {
+     "dev": "next dev",

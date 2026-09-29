@@ -1,0 +1,1 @@
+export const MAX_ASSISTANT_LENGTH = 10_000;

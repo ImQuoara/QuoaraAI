@@ -1,0 +1,56 @@
+name: Verify QuoaraAi Source
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+
+      - name: Verify source identity
+        run: python3 tools/verify_source.py
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install locked dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Audit production dependencies
+        working-directory: backend
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Lint
+        working-directory: backend
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: backend
+        run: npm run typecheck
+
+      - name: Test
+        working-directory: backend
+        run: npm test
+
+      - name: Production build
+        working-directory: backend
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ci-placeholder-key
+          SUPABASE_SECRET_KEY: ci-placeholder-secret
+          QUOARAAI_OWNER_USER_ID: 00000000-0000-4000-8000-000000000000
+        run: npm run build

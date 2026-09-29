@@ -1,0 +1,19 @@
+# Backend
+backend/node_modules/
+backend/.next/
+backend/.env*
+!backend/.env.example
+backend/*.log
+backend/*.tsbuildinfo
+
+# Android / Gradle
+android/.gradle/
+android/local.properties
+android/**/build/
+*.apk
+*.aab
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
