@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { QUOARAAI_CAPABILITIES } from '../src/quoaraai/capabilities';
+import { CODING_LANGUAGES, codingOperatingContext, detectCodingLanguage, isCodingRequest, withCodingContext } from '../src/quoaraai/coding';
 import { buildCouncilBrief, DEFAULT_COUNCIL } from '../src/quoaraai/council';
 import { chooseLowerCostRoute } from '../src/quoaraai/cost';
 import { evaluateAction } from '../src/quoaraai/governance';
@@ -9,9 +10,10 @@ import { routeTask } from '../src/quoaraai/router';
 import { validateSkillPackage } from '../src/quoaraai/skills';
 import { scoreVerification } from '../src/quoaraai/verification';
 
-test('all 20 requested QuoaraAi capabilities are represented', () => {
-  assert.equal(QUOARAAI_CAPABILITIES.length, 20);
-  assert.equal(new Set(QUOARAAI_CAPABILITIES.map((x) => x.id)).size, 20);
+test('requested QuoaraAi capabilities are represented without duplicate IDs', () => {
+  assert.ok(QUOARAAI_CAPABILITIES.length >= 20);
+  assert.equal(new Set(QUOARAAI_CAPABILITIES.map((x) => x.id)).size, QUOARAAI_CAPABILITIES.length);
+  assert.ok(QUOARAAI_CAPABILITIES.some((x) => x.id === 'universal_coding' && x.status === 'active'));
 });
 
 test('owner-first governance allows local analysis but gates mutations', () => {
@@ -107,3 +109,27 @@ test('owner approval integrity migration makes signed approval + ledger atomic a
   assert.match(sql, /revoke update, delete, truncate on table public\.owner_action_ledger from service_role/i);
   assert.match(sql, /revoke update, delete, truncate on table public\.quoaraai_action_ledger from service_role/i);
 });
+
+test('universal coding engine recognizes common and niche languages', () => {
+  assert.ok(CODING_LANGUAGES.length >= 60);
+  assert.equal(detectCodingLanguage('Build this Android screen in Kotlin')?.id, 'kotlin');
+  assert.equal(detectCodingLanguage('```rust\nfn main() {}\n```')?.id, 'rust');
+  assert.equal(detectCodingLanguage('write a parser in COBOL')?.id, 'cobol');
+});
+
+test('coding mode handles unknown languages with an honest generic workflow', () => {
+  const context = codingOperatingContext('Write a program for this niche language called FutureLang');
+  assert.ok(context);
+  assert.match(context ?? '', /not confidently identified/i);
+  assert.match(context ?? '', /ASK CHATGPT/);
+  assert.match(context ?? '', /NOT RUN/);
+});
+
+test('coding context is attached only to coding requests and does not alter stored history', () => {
+  const history = [{ role: 'user' as const, content: 'Write a Python API' }];
+  const enriched = withCodingContext(history, history[0].content);
+  assert.match(enriched[0].content, /QUOARAAI INTERNAL CODING MODE/);
+  assert.equal(history[0].content, 'Write a Python API');
+  assert.equal(isCodingRequest('What is your favorite color?'), false);
+});
+

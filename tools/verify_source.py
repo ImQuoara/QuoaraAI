@@ -7,12 +7,13 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED = {
+    "release_track": "001V",
     "baseline": "001U",
     "android_package": "com.imquoara.quoaraai",
     "android_version": "0.4.8-alpha",
     "android_code": "12",
     "backend_name": "quoaraai-backend",
-    "backend_version": "1.1.8",
+    "backend_version": "1.1.9",
 }
 
 errors = []
@@ -76,6 +77,8 @@ for rel in [
     "android/app/proguard-rules.pro",
     "backend/supabase/migrations/20260928004000_owner_approval_integrity.sql",
     "INSTALL-PROOF-GATE-001U.md",
+    "backend/src/quoaraai/coding.ts",
+    "AI-REVIEW-HANDOFF-001V.md",
 ]:
     require((ROOT / rel).is_file(), f"missing install/security gate file: {rel}")
 

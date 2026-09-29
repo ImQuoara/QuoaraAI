@@ -71,6 +71,26 @@ export async function POST(request: Request) {
             content: message.content,
           }));
       },
+
+      async recordLearningCandidate(userId, conversationId, requestText, responseText) {
+        const { error } = await admin()
+          .from('quoaraai_learning_candidates')
+          .insert({
+            user_id: userId,
+            project_id: null,
+            kind: 'skill',
+            payload: {
+              domain: 'coding',
+              conversation_id: conversationId,
+              request_excerpt: requestText.slice(0, 4000),
+              response_excerpt: responseText.slice(0, 8000),
+              source: 'chat_coding_session',
+            },
+            rationale: 'Captured from an owner coding conversation for later review and skill promotion. This candidate is not automatically activated.',
+            status: 'pending',
+          });
+        if (error) console.error('Could not record coding learning candidate:', error);
+      },
     });
 
     return handler(request);

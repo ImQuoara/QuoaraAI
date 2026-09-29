@@ -1,5 +1,6 @@
 import { MAX_ASSISTANT_LENGTH } from '@/ai/limits';
 import type { AIProvider, ChatMessage, ChatRole } from '@/ai/provider';
+import { isCodingRequest, withCodingContext } from '@/quoaraai/coding';
 
 export const MAX_MESSAGE_LENGTH = 10_000;
 export const MAX_HISTORY_MESSAGES = 50;
@@ -12,6 +13,7 @@ export interface ChatDeps {
   consumeRateLimit(userId: string): Promise<boolean>;
   insertMessage(conversationId: string, role: ChatRole, content: string): Promise<void>;
   listMessages(conversationId: string, limit: number): Promise<ChatMessage[]>;
+  recordLearningCandidate?(userId: string, conversationId: string, request: string, response: string): Promise<void>;
 }
 
 export function parseChatBody(body: unknown) {
@@ -71,7 +73,8 @@ export function createChatPostHandler(deps: ChatDeps) {
 
     await deps.insertMessage(conversationId, 'user', message);
     const history = await deps.listMessages(conversationId, MAX_HISTORY_MESSAGES);
-    const upstream = await deps.ai.streamChat(history);
+    const providerHistory = withCodingContext(history, message);
+    const upstream = await deps.ai.streamChat(providerHistory);
     const reader = upstream.getReader();
     const decoder = new TextDecoder();
     const encoder = new TextEncoder();
@@ -85,6 +88,9 @@ export function createChatPostHandler(deps: ChatDeps) {
       persisted = true;
       if (fullResponse.length > 0) {
         await deps.insertMessage(conversationId, 'assistant', fullResponse);
+        if (deps.recordLearningCandidate && isCodingRequest(message)) {
+          await deps.recordLearningCandidate(user.id, conversationId, message, fullResponse);
+        }
       }
     }
 

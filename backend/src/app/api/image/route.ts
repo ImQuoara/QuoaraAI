@@ -160,6 +160,6 @@ export async function POST(request: Request) {
         metadata: { action_hash: actionHash, provider, candidates },
       }),
     ]);
-    return Response.json({ error: 'Free image allowance/provider is unavailable. QuoaraAi did not attempt a paid fallback.' }, { status: 429 });
+    return Response.json({ error: 'Free image allowance/provider is unavailable. No billed provider was attempted.' }, { status: 429 });
   }
 }
