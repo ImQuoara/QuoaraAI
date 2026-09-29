@@ -2,6 +2,15 @@ import { isOwnerIdentity } from '@/lib/auth/owner';
 import { createClient } from '@/lib/supabase/server';
 import { providerRegistry } from '@/providers/registry';
 
+const RELEASE_TRACK = '001Z';
+const BACKEND_VERSION = '1.1.13';
+const ANDROID_IDENTITY = {
+  sourceBaseline: '001U',
+  applicationId: 'com.imquoara.quoaraai',
+  version: '0.4.8-alpha',
+  versionCode: 12,
+} as const;
+
 export async function GET() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
@@ -11,8 +20,10 @@ export async function GET() {
 
   return Response.json({
     app: 'QuoaraAi',
-    sourceBaseline: '001R',
-    backendVersion: '1.1.4',
+    releaseTrack: RELEASE_TRACK,
+    sourceBaseline: RELEASE_TRACK,
+    backendVersion: BACKEND_VERSION,
+    android: ANDROID_IDENTITY,
     clientMode: 'android_owner_alpha',
     providers: providerRegistry(),
     guarantees: {

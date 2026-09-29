@@ -29,7 +29,7 @@ Milestone 1 provides:
 
 ## Security boundary
 
-No service-role key is used. Gemini secrets stay server-side. RLS prevents cross-user conversation access. Builder Mode, tools, file execution, deployment privileges, and autonomous code modification are intentionally excluded from Milestone 1.
+A server-only Supabase secret/service-role credential is used for privileged persistence and owner-only server operations. It must never be exposed to browser or Android clients. Gemini secrets also stay server-side. RLS prevents cross-user conversation access. Builder Mode, tools, file execution, deployment privileges, and autonomous code modification are intentionally excluded from Milestone 1.
 
 ## Security Patch 001C
 
