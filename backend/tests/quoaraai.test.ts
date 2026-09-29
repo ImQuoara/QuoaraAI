@@ -95,7 +95,7 @@ test('free image route is disabled by default and execution re-verifies signed a
   assert.match(route, /verifyP256Signature/);
   assert.match(route, /owner_devices/);
   assert.match(route, /No provider call was made/i);
-  assert.match(route, /did not attempt a paid fallback/i);
+  assert.match(route, /No billed provider was attempted/i);
 });
 
 test('owner approval integrity migration makes signed approval + ledger atomic and ledgers append-only', () => {
