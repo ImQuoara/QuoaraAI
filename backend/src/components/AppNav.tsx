@@ -16,7 +16,7 @@ export default function AppNav() {
   return (
     <nav
       aria-label="QuoaraAi primary navigation"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-800 bg-neutral-950/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.07] bg-[#09090b]/92 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl md:hidden"
     >
       <div className="mx-auto grid max-w-lg grid-cols-4 gap-1">
         {ITEMS.map((item) => {
@@ -26,7 +26,9 @@ export default function AppNav() {
               key={item.href}
               href={item.href}
               className={`flex min-h-12 flex-col items-center justify-center rounded-xl text-[11px] transition ${
-                active ? 'bg-neutral-800 text-white' : 'text-neutral-500 hover:bg-neutral-900 hover:text-neutral-200'
+                active
+                  ? 'bg-violet-400/[0.09] text-violet-200'
+                  : 'text-zinc-600 hover:bg-white/5 hover:text-zinc-300'
               }`}
             >
               <span aria-hidden className="text-base leading-none">{item.icon}</span>

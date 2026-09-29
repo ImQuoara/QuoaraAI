@@ -1,11 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import MessageComposer from './MessageComposer';
 import AppNav from './AppNav';
 import MessageList, { type UIMessage } from './MessageList';
+
+const SUGGESTIONS = [
+  ['Build', 'Build me a clean mobile-first app feature and explain the architecture.'],
+  ['Code', 'Write production-ready code for an idea I describe.'],
+  ['Debug', 'Help me debug an error and show the exact fix.'],
+  ['Plan', 'Turn my idea into a technical build plan with the next action.'],
+] as const;
 
 export default function ChatInterface({
   conversationId,
@@ -18,6 +25,7 @@ export default function ChatInterface({
   const [messages, setMessages] = useState<UIMessage[]>(initialMessages);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const requestRef = useRef<AbortController | null>(null);
 
   async function ensureConversation(firstMessage: string) {
     if (conversationId) return conversationId;
@@ -35,6 +43,10 @@ export default function ChatInterface({
   }
 
   async function send(message: string) {
+    if (busy) return;
+
+    const controller = new AbortController();
+    requestRef.current = controller;
     setBusy(true);
     setError(null);
     setMessages((current) => [...current, { role: 'user', content: message }]);
@@ -45,6 +57,7 @@ export default function ChatInterface({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ conversationId: id, message }),
+        signal: controller.signal,
       });
 
       if (!response.ok || !response.body) {
@@ -70,35 +83,83 @@ export default function ChatInterface({
 
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong.');
+      if (!controller.signal.aborted) {
+        setError(err instanceof Error ? err.message : 'Something went wrong.');
+      }
     } finally {
+      if (requestRef.current === controller) requestRef.current = null;
       setBusy(false);
     }
   }
 
+  function stop() {
+    requestRef.current?.abort();
+    requestRef.current = null;
+    setBusy(false);
+  }
+
+  const empty = messages.length === 0;
+
   return (
-    <main className="flex min-w-0 flex-1 flex-col bg-neutral-950 pb-20 md:pb-0">
-      <header className="flex h-14 items-center justify-between border-b border-neutral-800 px-4">
-        <LinkHome />
-        <div className="flex items-center gap-3">
-          <Link href="/control" className="text-xs text-neutral-400 hover:text-neutral-200">Control Center</Link>
-          <span className="text-xs text-neutral-500">Owner Alpha</span>
+    <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-[#09090b] pb-20 md:pb-0">
+      <div className="pointer-events-none absolute inset-0 quoara-grid opacity-35" />
+      <div className="pointer-events-none absolute left-1/2 top-[-18rem] h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-violet-600/[0.08] blur-3xl" />
+
+      <header className="relative z-20 flex h-14 shrink-0 items-center justify-between border-b border-white/[0.06] bg-[#09090b]/75 px-4 backdrop-blur-xl sm:px-6">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="font-semibold tracking-tight text-zinc-100">Quoara</span>
+          <span className="hidden rounded-full border border-emerald-400/15 bg-emerald-400/[0.06] px-2 py-1 text-[10px] font-medium text-emerald-300/80 sm:inline">
+            Universal Coding Engine
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          <Link href="/projects" className="rounded-lg px-2.5 py-2 text-xs text-zinc-600 transition hover:bg-white/5 hover:text-zinc-200">Projects</Link>
+          <Link href="/control" className="rounded-lg px-2.5 py-2 text-xs text-zinc-600 transition hover:bg-white/5 hover:text-zinc-200">Control</Link>
         </div>
       </header>
-      {error && <div className="mx-4 mt-3 rounded-lg border border-red-900 bg-red-950/40 p-3 text-sm text-red-200">{error}</div>}
-      <div className="flex-1 overflow-y-auto">
-        <MessageList messages={messages} />
+
+      {error && (
+        <div className="relative z-20 mx-auto mt-3 w-[calc(100%-2rem)] max-w-4xl rounded-xl border border-red-400/20 bg-red-950/30 px-4 py-3 text-sm text-red-200">
+          {error}
+        </div>
+      )}
+
+      <div className="relative z-10 min-h-0 flex-1 overflow-y-auto">
+        {empty ? (
+          <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col items-center justify-center px-5 py-10 text-center">
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-[1.4rem] border border-violet-400/20 bg-gradient-to-br from-violet-500/20 via-fuchsia-400/10 to-cyan-300/10 text-2xl font-black text-violet-100 shadow-[0_0_70px_rgba(124,58,237,0.15)]">
+              Q
+            </div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.28em] text-zinc-700">QuoaraAi</p>
+            <h1 className="max-w-2xl text-3xl font-semibold tracking-[-0.04em] text-zinc-100 sm:text-5xl">
+              What are we building?
+            </h1>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-zinc-600">
+              Chat, code, plan and iterate in one workspace. When Quoara cannot verify something, it will tell you exactly what to ask next.
+            </p>
+
+            <div className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-2 sm:grid-cols-2">
+              {SUGGESTIONS.map(([label, prompt]) => (
+                <button
+                  key={label}
+                  onClick={() => void send(prompt)}
+                  className="group rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4 text-left transition hover:-translate-y-0.5 hover:border-violet-400/20 hover:bg-violet-400/[0.05]"
+                >
+                  <div className="mb-1 text-xs font-semibold text-zinc-300">{label}</div>
+                  <div className="text-xs leading-5 text-zinc-600 group-hover:text-zinc-500">{prompt}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <MessageList messages={messages} streaming={busy} />
+        )}
       </div>
-      <MessageComposer disabled={busy} onSend={send} />
+
+      <div className="relative z-20 shrink-0">
+        <MessageComposer disabled={busy} onSend={send} onStop={stop} />
+      </div>
       <AppNav />
     </main>
-  );
-}
-
-function LinkHome() {
-  return (
-    <Link href="/chat" className="font-semibold tracking-wide">
-      QuoaraAi
-    </Link>
   );
 }

@@ -7,13 +7,13 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED = {
-    "release_track": "001X",
+    "release_track": "001Y",
     "baseline": "001U",
     "android_package": "com.imquoara.quoaraai",
     "android_version": "0.4.8-alpha",
     "android_code": "12",
     "backend_name": "quoaraai-backend",
-    "backend_version": "1.1.11",
+    "backend_version": "1.1.12",
 }
 
 errors = []
