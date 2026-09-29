@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
@@ -112,6 +114,8 @@ final class QuoaraAiShell {
         ScrollView scroll = new ScrollView(activity);
         TextView results = text("", 14f, Color.LTGRAY);
         results.setTextIsSelectable(true);
+        results.setAutoLinkMask(Linkify.WEB_URLS);
+        results.setMovementMethod(LinkMovementMethod.getInstance());
         scroll.addView(results);
         page.addView(scroll, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
 
@@ -342,8 +346,12 @@ final class QuoaraAiShell {
         if (providers != null) {
             for (int i = 0; i < providers.length(); i++) {
                 JSONObject p = providers.getJSONObject(i);
+                String providerStatus = p.optString("status", p.optBoolean("enabled") ? "ready" : "off");
                 out.append("• ").append(p.optString("capability")).append(": ")
-                    .append(p.optString("displayName")).append(p.optBoolean("enabled") ? " — ready" : " — off").append("\n");
+                    .append(p.optString("displayName")).append(" — ")
+                    .append(providerStatus.replace('_', ' ')).append("\n");
+                String reason = p.optString("reason");
+                if (!reason.isBlank()) out.append("  ").append(reason).append("\n");
             }
         }
         return out.toString();

@@ -72,10 +72,27 @@ export function createChatPostHandler(deps: ChatDeps) {
       return Response.json({ error: 'Rate limit exceeded' }, { status: 429 });
     }
 
-    await deps.insertMessage(conversationId, 'user', message);
     const history = await deps.listMessages(conversationId, MAX_HISTORY_MESSAGES);
-    const providerHistory = withCodingContext(history, message);
-    const upstream = await deps.ai.streamChat(providerHistory);
+    const providerHistory = withCodingContext(
+      [...history, { role: 'user', content: message }],
+      message,
+    );
+
+    let upstream: ReadableStream<Uint8Array>;
+    try {
+      upstream = await deps.ai.streamChat(providerHistory);
+    } catch (error) {
+      console.error('Chat provider startup failed:', error);
+      return Response.json(
+        { error: 'Chat provider is unavailable in approved free-only mode. No paid fallback was attempted.' },
+        { status: 503 },
+      );
+    }
+
+    // Persist only after a provider stream has actually started. This avoids
+    // leaving a dangling user message when provider configuration/quota fails.
+    await deps.insertMessage(conversationId, 'user', message);
+
     const reader = upstream.getReader();
     const decoder = new TextDecoder();
     const encoder = new TextEncoder();
@@ -139,10 +156,12 @@ export function createChatPostHandler(deps: ChatDeps) {
             controller.close();
           }
         } catch (error) {
+          await persistAssistant();
           controller.error(error);
         }
       },
       async cancel(reason) {
+        await persistAssistant();
         await reader.cancel(reason);
       },
     });

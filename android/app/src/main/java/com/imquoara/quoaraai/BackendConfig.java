@@ -14,12 +14,15 @@ final class BackendConfig {
     private BackendConfig() {}
 
     static String load(Context context) {
+        // Final builds prefer the compiled, reviewed production origin. This
+        // prevents an old development URL in SharedPreferences from silently
+        // redirecting the installed owner app.
+        String compiled = BuildConfig.QUOARAAI_APP_URL;
+        if (isValidHttpsUrl(compiled) && !compiled.endsWith(".invalid")) return normalize(compiled);
+
         SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         String saved = prefs.getString(KEY_BACKEND_URL, "");
         if (isValidHttpsUrl(saved)) return normalize(saved);
-
-        String compiled = BuildConfig.QUOARAAI_APP_URL;
-        if (isValidHttpsUrl(compiled) && !compiled.endsWith(".invalid")) return normalize(compiled);
         return null;
     }
 

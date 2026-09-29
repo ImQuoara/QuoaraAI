@@ -56,10 +56,10 @@ jobs:
           test -f "$APK"
           {
             echo "QuoaraAi APK proof"
-            echo "source_baseline=001U"
+            echo "source_baseline=002A"
             echo "expected_package=com.imquoara.quoaraai"
-            echo "expected_version_name=0.4.8-alpha"
-            echo "expected_version_code=12"
+            echo "expected_version_name=1.0.0"
+            echo "expected_version_code=13"
             echo
             sha256sum "$APK"
             echo

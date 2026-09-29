@@ -2,13 +2,13 @@ import { isOwnerIdentity } from '@/lib/auth/owner';
 import { createClient } from '@/lib/supabase/server';
 import { providerRegistry } from '@/providers/registry';
 
-const RELEASE_TRACK = '001Z';
-const BACKEND_VERSION = '1.1.13';
+const RELEASE_TRACK = '002A';
+const BACKEND_VERSION = '1.2.0';
 const ANDROID_IDENTITY = {
-  sourceBaseline: '001U',
+  sourceBaseline: '002A',
   applicationId: 'com.imquoara.quoaraai',
-  version: '0.4.8-alpha',
-  versionCode: 12,
+  version: '1.0.0',
+  versionCode: 13,
 } as const;
 
 export async function GET() {
@@ -24,7 +24,7 @@ export async function GET() {
     sourceBaseline: RELEASE_TRACK,
     backendVersion: BACKEND_VERSION,
     android: ANDROID_IDENTITY,
-    clientMode: 'android_owner_alpha',
+    clientMode: 'android_owner_final',
     providers: providerRegistry(),
     guarantees: {
       noSilentSpending: true,
