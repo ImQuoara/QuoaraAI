@@ -1,7 +1,7 @@
 import type { AIProvider, ChatMessage } from '../provider';
 
 const DEFAULT_MODELS = [
-  '@cf/meta/llama-4-scout-17b-16e-instruct',
+  '@cf/zai-org/glm-4.7-flash',
   '@cf/google/gemma-4-26b-a4b-it',
   '@cf/openai/gpt-oss-20b',
 ];
@@ -55,7 +55,6 @@ export class CloudflareFreeProvider implements AIProvider {
               messages,
               max_tokens: maxTokens,
               stream: false,
-              options: { rejectIfBusy: true },
             }),
             cache: 'no-store',
             signal: AbortSignal.timeout(45_000),
@@ -66,9 +65,7 @@ export class CloudflareFreeProvider implements AIProvider {
         if (!response.ok) {
           const providerMessage = typeof raw?.error?.message === 'string' ? raw.error.message : `HTTP ${response.status}`;
           errors.push(`${model}: ${providerMessage}`);
-          // Free-only routing may try another explicitly approved free Workers AI model.
-          // It never switches to a third-party paid model or unified-billing route.
-          if ([403, 408, 429, 500, 502, 503, 504].includes(response.status)) continue;
+          if ([402, 403, 408, 429, 500, 502, 503, 504].includes(response.status)) continue;
           throw new Error(`Cloudflare Workers AI request failed: ${providerMessage}`);
         }
 
@@ -83,7 +80,7 @@ export class CloudflareFreeProvider implements AIProvider {
       }
     }
 
-    throw new Error(`All approved free chat models were unavailable. ${errors.join(' | ')}`);
+    throw new Error(`Free-only Cloudflare chat is unavailable. No paid fallback was attempted. ${errors.join(' | ')}`);
   }
 
   async streamChat(messages: ChatMessage[]): Promise<ReadableStream<Uint8Array>> {

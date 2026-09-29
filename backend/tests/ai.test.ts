@@ -169,6 +169,27 @@ test('assistant output is capped and persisted text exactly equals streamed text
   assert.equal(saved[1][1], streamed);
 });
 
+test('chat provider startup failure does not persist a dangling user message', async () => {
+  const saved: Array<[string, string]> = [];
+  const failingAI: AIProvider = {
+    async generate() { throw new Error('provider unavailable'); },
+    async streamChat() { throw new Error('provider unavailable'); },
+  };
+  const handler = createChatPostHandler(chatDeps({
+    ai: failingAI,
+    insertMessage: async (_id, role, content) => { saved.push([role, content]); },
+    listMessages: async () => [],
+  }));
+
+  const response = await handler(new Request('http://local/api/chat', {
+    method: 'POST',
+    body: JSON.stringify({ conversationId: VALID_CONVERSATION_ID, message: 'hello' }),
+  }));
+
+  assert.equal(response.status, 503);
+  assert.deepEqual(saved, []);
+});
+
 test('conversation API rejects unauthorized and invalid title', async () => {
   const unauthorized = createConversationHandlers({
     getUser: async () => null,
