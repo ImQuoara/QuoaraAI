@@ -7,13 +7,13 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED = {
-    "release_track": "001Y",
+    "release_track": "001Z",
     "baseline": "001U",
     "android_package": "com.imquoara.quoaraai",
     "android_version": "0.4.8-alpha",
     "android_code": "12",
     "backend_name": "quoaraai-backend",
-    "backend_version": "1.1.12",
+    "backend_version": "1.1.13",
 }
 
 errors = []
@@ -35,6 +35,8 @@ network = text("android/app/src/main/res/xml/network_security_config.xml")
 android_wf = text(".github/workflows/build-quoaraai-android.yml")
 backend_wf = text(".github/workflows/verify-quoaraai.yml")
 api_client = text("android/app/src/main/java/com/imquoara/quoaraai/ApiClient.java")
+capabilities_route = text("backend/src/app/api/mobile/capabilities/route.ts")
+request_core = text("backend/src/lib/security/request-core.ts")
 
 require(pkg.get("name") == EXPECTED["backend_name"], "backend package name mismatch")
 require(pkg.get("version") == EXPECTED["backend_version"], "backend package version mismatch")
@@ -58,6 +60,14 @@ require('android:usesCleartextTraffic="false"' in manifest, "Android cleartext t
 require('android:allowBackup="false"' in manifest, "Android backup must be disabled")
 require('cleartextTrafficPermitted="false"' in network, "network security cleartext must be disabled")
 require("BackendConfig.origin(this.baseUrl)" in api_client, "ApiClient must reuse canonical backend origin parser")
+require(f"const RELEASE_TRACK = '{EXPECTED['release_track']}'" in capabilities_route, "mobile capabilities release track mismatch")
+require(f"const BACKEND_VERSION = '{EXPECTED['backend_version']}'" in capabilities_route, "mobile capabilities backend version mismatch")
+require(f"sourceBaseline: '{EXPECTED['baseline']}'" in capabilities_route, "mobile capabilities Android baseline mismatch")
+require(f"applicationId: '{EXPECTED['android_package']}'" in capabilities_route, "mobile capabilities Android package mismatch")
+require(f"version: '{EXPECTED['android_version']}'" in capabilities_route, "mobile capabilities Android version mismatch")
+require(f"versionCode: {EXPECTED['android_code']}" in capabilities_route, "mobile capabilities Android versionCode mismatch")
+require("if (!origin) return fetchSite === 'same-origin' || fetchSite === 'none';" in request_core, "mutation origin fallback must fail closed")
+require("if (!/^\\d+$/.test(normalized)) return true;" in request_core, "content-length validation must reject malformed values")
 
 for token in [
     f"source_baseline={EXPECTED['baseline']}",
@@ -79,6 +89,8 @@ for rel in [
     "INSTALL-PROOF-GATE-001U.md",
     "backend/src/quoaraai/coding.ts",
     "AI-REVIEW-HANDOFF-001V.md",
+    "AI-REVIEW-HANDOFF-001Z.md",
+    "backend/tests/request-security.test.ts",
 ]:
     require((ROOT / rel).is_file(), f"missing install/security gate file: {rel}")
 
