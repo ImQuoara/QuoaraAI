@@ -1,0 +1,93 @@
+name: QuoaraAi Owner Write Bridge
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+
+jobs:
+  owner-patch:
+    if: >-
+      github.event.issue.pull_request == null &&
+      github.actor == 'ImQuoara' &&
+      startsWith(github.event.comment.body, '/quoara-patch-gz')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Decode owner patch
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          python3 - <<'PY'
+          import os, base64, gzip
+
+          body = os.environ["COMMENT_BODY"]
+          marker = "/quoara-patch-gz"
+
+          if not body.startswith(marker):
+              raise SystemExit("Invalid command")
+
+          payload = body[len(marker):].strip()
+          if not payload:
+              raise SystemExit("Missing patch payload")
+
+          raw = base64.b64decode(payload, validate=True)
+          patch = gzip.decompress(raw)
+
+          if len(patch) > 500_000:
+              raise SystemExit("Patch too large")
+
+          with open("/tmp/quoara.patch", "wb") as f:
+              f.write(patch)
+          PY
+
+      - name: Validate patch
+        run: |
+          git apply --check /tmp/quoara.patch
+          git apply /tmp/quoara.patch
+
+          if git diff --name-only | grep -Fxq '.github/workflows/quoara-write-bridge.yml'; then
+            echo "The bridge may not modify itself."
+            exit 1
+          fi
+
+          git diff --check
+
+      - name: Verify source identity
+        run: python3 tools/verify_source.py
+
+      - name: Commit and push branch
+        id: push
+        run: |
+          BRANCH="chatgpt/owner-patch-${{ github.event.issue.number }}-${{ github.run_id }}"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+
+          git config user.name "QuoaraAi Owner Bridge"
+          git config user.email "actions@users.noreply.github.com"
+
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "Apply owner-approved QuoaraAi patch"
+          git push origin "$BRANCH"
+
+      - name: Open pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.push.outputs.branch }}
+        run: |
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "QuoaraAi owner-approved patch" \
+            --body "Created by the QuoaraAi Owner Write Bridge from an authenticated command issued by ImQuoara. Changes must pass review/CI before merge."
