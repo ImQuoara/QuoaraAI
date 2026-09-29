@@ -7,12 +7,12 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED = {
-    "baseline": "001T",
+    "baseline": "001U",
     "android_package": "com.imquoara.quoaraai",
-    "android_version": "0.4.7-alpha",
-    "android_code": "11",
+    "android_version": "0.4.8-alpha",
+    "android_code": "12",
     "backend_name": "quoaraai-backend",
-    "backend_version": "1.1.7",
+    "backend_version": "1.1.8",
 }
 
 errors = []
@@ -75,7 +75,7 @@ require("python3 tools/verify_source.py" in backend_wf, "Backend workflow must r
 for rel in [
     "android/app/proguard-rules.pro",
     "backend/supabase/migrations/20260928004000_owner_approval_integrity.sql",
-    "INSTALL-PROOF-GATE-001T.md",
+    "INSTALL-PROOF-GATE-001U.md",
 ]:
     require((ROOT / rel).is_file(), f"missing install/security gate file: {rel}")
 

@@ -4,10 +4,10 @@ Updated: 2026-09-28
 
 ## Canonical identity
 - Product: **QuoaraAi**
-- Current local source baseline: **001T**
+- Current local source baseline: **001U**
 - Android application ID / namespace: `com.imquoara.quoaraai`
-- Android version: `0.4.7-alpha` (`versionCode 11`)
-- Backend package: `quoaraai-backend` `1.1.7`
+- Android version: `0.4.8-alpha` (`versionCode 12`)
+- Backend package: `quoaraai-backend` `1.1.8`
 - Canonical Supabase declared by owner: `Self build` / `csoimooaosncrrhaittf` / `ca-central-1`
 - Canonical GitHub repository: **not created/verified yet**
 
@@ -81,7 +81,7 @@ See `GEMINI-REVIEW-RECONCILIATION-001P.md`. 001P accepts only findings supported
 - This removes origin-format drift and fixes IPv6-origin formatting.
 - Added dependency-free `tools/verify_source.py` identity/security preflight.
 - Both backend and Android CI workflows run the preflight before dependency installation/build work.
-- Current installation gate: `INSTALL-PROOF-GATE-001T.md`.
+- Current installation gate: `INSTALL-PROOF-GATE-001U.md`.
 
 
 ## 001T CI bootstrap hardening
@@ -91,3 +91,9 @@ See `GEMINI-REVIEW-RECONCILIATION-001P.md`. 001P accepts only findings supported
 - Preserved manual `workflow_dispatch` for later reruns.
 - Android/native API canonical-origin fix from 001S is retained.
 - Full CI execution, APK generation, live Supabase verification, and physical-phone installation remain unverified until their respective gates run.
+
+
+## 001U CI repair evidence
+
+Canonical 001T GitHub commit: `a1cb17237710539accb5986e1f7794e6fc6fd2b2`.
+The first backend CI run proved dependency installation and `npm audit --omit=dev --audit-level=high` passed with 0 vulnerabilities, then failed on two lint errors. The first Android CI run failed during SDK setup because setup-android requested the obsolete `tools` package. 001U contains the smallest source fixes for those observed failures.

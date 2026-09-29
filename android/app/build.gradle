@@ -10,12 +10,12 @@ android {
         applicationId 'com.imquoara.quoaraai'
         minSdk 28
         targetSdk 36
-        versionCode 11
-        versionName '0.4.7-alpha'
+        versionCode 12
+        versionName '0.4.8-alpha'
 
         def configuredUrl = providers.gradleProperty('QUOARAAI_APP_URL').orNull ?: 'https://quoaraai.invalid'
         buildConfigField 'String', 'QUOARAAI_APP_URL', '"' + configuredUrl.replace('"', '\\"') + '"'
-        buildConfigField 'String', 'QUOARAAI_SOURCE_BASELINE', '"001T"'
+        buildConfigField 'String', 'QUOARAAI_SOURCE_BASELINE', '"001U"'
     }
 
     buildFeatures {

@@ -59,7 +59,7 @@ export default function ResearchClient() {
           className="mt-2 w-full resize-none rounded-2xl border border-neutral-700 bg-neutral-950 px-4 py-3 outline-none focus:border-neutral-400"
         />
         <div className="mt-4 rounded-2xl border border-emerald-900/60 bg-emerald-950/20 p-4 text-xs leading-5 text-emerald-100">
-          Pressing “Search sources” sends only this query to Tavily. This build accepts only Tavily's no-card free tier; if the provider is not locked to free-only mode, QuoaraAi refuses to run it.
+          Pressing “Search sources” sends only this query to Tavily. This build accepts only Tavily’s no-card free tier; if the provider is not locked to free-only mode, QuoaraAi refuses to run it.
         </div>
         {error && <div className="mt-4 rounded-2xl border border-red-900 bg-red-950/40 p-4 text-sm text-red-200">{error}</div>}
         <button disabled={!query.trim() || busy} className="mt-5 w-full rounded-2xl bg-white px-5 py-3 font-medium text-black disabled:opacity-40">

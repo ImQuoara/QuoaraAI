@@ -27,6 +27,8 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
 
       - name: Install Android API 36 build tools
         shell: bash
@@ -52,10 +54,10 @@ jobs:
           test -f "$APK"
           {
             echo "QuoaraAi APK proof"
-            echo "source_baseline=001T"
+            echo "source_baseline=001U"
             echo "expected_package=com.imquoara.quoaraai"
-            echo "expected_version_name=0.4.7-alpha"
-            echo "expected_version_code=11"
+            echo "expected_version_name=0.4.8-alpha"
+            echo "expected_version_code=12"
             echo
             sha256sum "$APK"
             echo
