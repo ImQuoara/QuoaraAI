@@ -50,6 +50,7 @@ export function createChatPostHandler(deps: ChatDeps) {
   return async function POST(request: Request) {
     const user = await deps.getUser();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    const userId = user.id;
 
     let body: unknown;
     try {
@@ -63,11 +64,11 @@ export function createChatPostHandler(deps: ChatDeps) {
 
     const { conversationId, message } = parsed;
 
-    if (!(await deps.ownsConversation(user.id, conversationId))) {
+    if (!(await deps.ownsConversation(userId, conversationId))) {
       return Response.json({ error: 'Conversation not found' }, { status: 404 });
     }
 
-    if (!(await deps.consumeRateLimit(user.id))) {
+    if (!(await deps.consumeRateLimit(userId))) {
       return Response.json({ error: 'Rate limit exceeded' }, { status: 429 });
     }
 
@@ -89,7 +90,7 @@ export function createChatPostHandler(deps: ChatDeps) {
       if (fullResponse.length > 0) {
         await deps.insertMessage(conversationId, 'assistant', fullResponse);
         if (deps.recordLearningCandidate && isCodingRequest(message)) {
-          await deps.recordLearningCandidate(user.id, conversationId, message, fullResponse);
+          await deps.recordLearningCandidate(userId, conversationId, message, fullResponse);
         }
       }
     }
