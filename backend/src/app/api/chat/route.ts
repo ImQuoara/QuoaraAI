@@ -12,6 +12,7 @@ export async function POST(request: Request) {
     if (bodyTooLarge(request, 32_768)) return Response.json({ error: 'Request too large.' }, { status: 413 });
     if (process.env.QUOARAAI_CHAT_ENABLED !== 'true') return Response.json({ error: 'Chat provider is installed but not activated.' }, { status: 503 });
     if (process.env.QUOARAAI_CHAT_COST_MODE !== 'free_only') return Response.json({ error: 'Paid chat mode is disabled until an exact cost-approval flow is enabled.' }, { status: 503 });
+    if (process.env.QUOARAAI_CHAT_PROVIDER !== 'cloudflare_free') return Response.json({ error: 'Chat provider is not pinned to cloudflare_free.' }, { status: 503 });
 
     const supabase = await createClient();
     let adminClient: ReturnType<typeof createAdminClient> | null = null;

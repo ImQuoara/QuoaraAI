@@ -29,8 +29,8 @@ test('content-length rejects malformed and negative values', () => {
   assert.equal(isUnsafeContentLength('1.5', 8192), true);
 });
 
-test('content-length allows absent/in-range values and rejects overflow', () => {
-  assert.equal(isUnsafeContentLength(null, 8192), false);
+test('content-length treats missing header as unsafe and rejects overflow', () => {
+  assert.equal(isUnsafeContentLength(null, 8192), true);
   assert.equal(isUnsafeContentLength('8192', 8192), false);
   assert.equal(isUnsafeContentLength('8193', 8192), true);
 });
