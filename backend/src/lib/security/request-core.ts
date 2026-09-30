@@ -16,7 +16,7 @@ export function isMutationMetadataSameOrigin(
 }
 
 export function isUnsafeContentLength(raw: string | null, maxBytes: number) {
-  if (raw === null) return false;
+  if (raw === null) return true;
 
   const normalized = raw.trim();
   if (!/^\d+$/.test(normalized)) return true;
